@@ -3,8 +3,11 @@ version: '3.4'
 services:
   backend:
     image: backend
+    command: gunicorn --bind 0.0.0.0:3001 src.main:app --reload
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - 3000:3000
+      - 3001:3001
+    volumes:
+      - .:/app
