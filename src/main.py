@@ -1,12 +1,23 @@
-# compose_flask/app.py
-from flask import Flask
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello():
-    return 'Hello World!'
+@app.route("/")
+def home():
+    return "Hello, Flask!"
+
+
+
+@app.route("/search", methods=['GET'])
+def hello_there():
+    query = request.args.get("q", default="", type=str)
+
+    response = {
+        "query": query,
+    }
+
+    return jsonify(response)
 
 
 if __name__ == "__main__":
