@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 from requests import Response
-from answers import get_answers
+from src.answers import get_answers
 
 load_dotenv()
 
@@ -15,6 +15,7 @@ def home():
 
 @app.route("/answers/<question_id>", methods=['GET'])
 def answers(question_id: int) -> Response:
+    print(f"GET /answers/{question_id}")
     answers = get_answers(question_id)
     return jsonify(answers)
 
@@ -22,6 +23,7 @@ def answers(question_id: int) -> Response:
 @app.route("/search", methods=['GET'])
 def hello_there():
     query = request.args.get("q", default="", type=str)
+    print(f"GET /search?q={query}")
 
     response = {
         "query": query,
