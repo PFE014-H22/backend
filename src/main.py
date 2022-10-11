@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
 from requests import Response
 from answers import get_answers
+
+load_dotenv()
 
 app = Flask(__name__)
 

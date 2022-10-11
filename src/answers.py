@@ -1,9 +1,10 @@
+from os import environ
 import requests
 
 
 def get_answers(question_id: int):
     params = {}
-    params["filter"] = '!6VvPDzQywl)na'
+    params["filter"] = environ["STACK_OVERFLOW_ANSWERS_FILTER"]
     params["order"] = "desc"
     params["site"] = "stackoverflow"
     params["sort"] = "activity"
