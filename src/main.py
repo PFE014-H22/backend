@@ -1,4 +1,9 @@
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
+from requests import Response
+from answers import get_answers
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -7,6 +12,11 @@ app = Flask(__name__)
 def home():
     return "Hello, Flask!"
 
+
+@app.route("/answers/<question_id>", methods=['GET'])
+def answers(question_id: int) -> Response:
+    answers = get_answers(question_id)
+    return jsonify(answers)
 
 
 @app.route("/search", methods=['GET'])
