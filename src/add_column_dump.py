@@ -1,5 +1,4 @@
 import csv
-import pandas as pd
 
 input_path = "../BD/QueryResults - questions.csv"
 output_path = "../BD/questions.csv"
