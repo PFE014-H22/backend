@@ -12,7 +12,7 @@ def generate_questions_csv(
     reader = csv.reader(open(input_path, 'r'))
     writer = csv.writer(open(output_path, 'w'))
     headers = next(reader)
-
+    headers.append("vecteur")
     writer.writerow(headers)
     text_columns = [3, 4]
 
