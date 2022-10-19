@@ -18,10 +18,11 @@ for row in reader:
 
     # ici on aurait un call vers le module tf-idf avec le text en param
     # vector = tfidf.getVector(text)
+    vector = 1234
 
     # apres on append dans chaque row pour l'ecrire dans la derniere colonne
-    # row.append(vector)
+    row.append(vector)
     
-    row.append(text[0]) # un test pour s'assurer que ca retourne la bonne info
+    # row.append(text[0]) # un test pour s'assurer que ca retourne la bonne info
 
     writer.writerow(row)
