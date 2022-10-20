@@ -11,8 +11,10 @@ def train_model(
 
     reader = csv.reader(open(csv_path, 'r', encoding='utf8'))
     next(reader)
-    text_columns = [3, 4]
+    text_columns = [0, 3, 4]
     dataset = []
+    id_dict = {}
+    index = 0
     nlp = NaturalLanguageProcessor()
 
     print("Reading CSV...")
@@ -20,14 +22,16 @@ def train_model(
         # ici on recois une liste avec le titre en position 0 et le body en position 1
         text = list(row[i] for i in text_columns)
 
+        id_dict[index] = text[0]
         # ici on aurait un call vers le module tf-idf avec le text en param
         # on combine le titres et le body pour l'instant
-        data = f'{text[0]} {text[1]}'
+        data = f'{text[1]} {text[2]}'
         dataset.append(data)
+        index += 1
         # vector = [1, 2, 3, 4, 5]
 
     print("Training model...")
-    nlp.train(dataset)
+    nlp.train(dataset, id_dict)
 
     if os.path.exists(output_path):
         os.remove(output_path)
