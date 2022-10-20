@@ -1,10 +1,12 @@
 import csv
 import os
 
+from nlp.nlp import NaturalLanguageProcessor
+
 
 def generate_questions_csv(
     input_path: str,
-    output_path: str,
+    output_path: str
 ):
     if os.path.exists(output_path):
         os.remove(output_path)
@@ -15,14 +17,19 @@ def generate_questions_csv(
     headers.append("vecteur")
     writer.writerow(headers)
     text_columns = [3, 4]
+    dataset = []
+    nlp = NaturalLanguageProcessor()
 
     for row in reader:
         # ici on recois une liste avec le titre en position 0 et le body en position 1
         text = list(row[i] for i in text_columns)
 
         # ici on aurait un call vers le module tf-idf avec le text en param
-        # vector = tfidf.getVector(text)
-        vector = [1, 2, 3, 4, 5]
+        # on combine le titres et le body pour l'instant
+        data = f'{text[0]} {text[1]}'
+        dataset.append(data)
+        vector = nlp.vectorize([data])
+        # vector = [1, 2, 3, 4, 5]
 
         # apres on append dans chaque row pour l'ecrire dans la derniere colonne
         row.append(vector)
