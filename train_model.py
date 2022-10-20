@@ -10,6 +10,7 @@ def train_model(
 ):
 
     reader = csv.reader(open(csv_path, 'r'))
+    next(reader)
     text_columns = [3, 4]
     dataset = []
     nlp = NaturalLanguageProcessor()
