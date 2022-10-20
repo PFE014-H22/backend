@@ -1,22 +1,20 @@
-import random
-
+import pickle
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from requests import Response
-
+from nlp.nlp import NaturalLanguageProcessor
 from src.answers import get_answers
-from src.SO.so_utils import generate_questions_csv, get_questions
 
 QUERY_RESULTS_PATH = "./BD/QueryResults.csv"
-QUESTIONS_PATH = "./BD/questions.csv"
+MODEL_PATH = "./BD/model.pickle"
 
+print("Loading model...")
+with open(MODEL_PATH, 'rb') as file:
+    nlp: NaturalLanguageProcessor = pickle.load(file)
+print("Model loaded")
 load_dotenv()
 
 app = Flask(__name__)
-generate_questions_csv(
-    input_path=QUERY_RESULTS_PATH,
-    output_path=QUESTIONS_PATH,
-)
 
 
 @app.route("/")
@@ -36,14 +34,26 @@ def hello_there():
     query = request.args.get("q", default="", type=str)
     print(f"GET /search?q={query}")
 
-    questions = get_questions(QUESTIONS_PATH)
+    cosine_similarities, related_indexes = nlp.search([query])
+
+    similarity_scores = [cosine_similarities[index]
+                         for index in related_indexes]
+
+    question_ids = [nlp.id_dict[index] for index in related_indexes]
+    answers = []
+    for i in range(len(question_ids)):
+        answer = get_answers(question_ids[i])[0]
+        answer = {
+            "answer_id": answer["answer_id"],
+            "is_accepted": answer["is_accepted"],
+            "link": answer["link"],
+            "similarity_score": similarity_scores[i]
+        }
+        answers.append(answer)
 
     response = {
-        "query": query,
-        "relatedQuestions": [
-            random.choice(questions),
-            random.choice(questions),
-        ]
+        "answers": answers,
+        "query": query
     }
 
     return jsonify(response)

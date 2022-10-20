@@ -7,19 +7,27 @@ import contractions
 
 
 class NaturalLanguageProcessor:
-    # TODO: Read/Write dataset/model to file
 
-    def __init__(self, dataset):
+    def __init__(self, dataset=None, id_dict=None):
+        if dataset is not None:
+            self.id_dict = id_dict
+            self.preprocessed_dataset = self.preprocess(dataset)
+            self.model = TfidfVectorizer().fit(self.preprocessed_dataset)
+            self.model_vectors = self.model.transform(
+                self.preprocessed_dataset)
+
+    def train(self, dataset, id_dict):
+        self.id_dict = id_dict
         self.preprocessed_dataset = self.preprocess(dataset)
         self.model = TfidfVectorizer().fit(self.preprocessed_dataset)
-        self.model_vector = self.model.transform(self.preprocessed_dataset)
+        self.model_vectors = self.model.transform(self.preprocessed_dataset)
 
     # Find the most similar sentence in the corpus to the query. Takes str list as input.
     def search(self, query):
         query = self.preprocess(query)
         query_vector = self.model.transform(query)
         cosine_similarities = cosine_similarity(
-            query_vector, self.model_vector).flatten()
+            query_vector, self.model_vectors).flatten()
         related_product_indices = cosine_similarities.argsort()[:-11:-1]
         return cosine_similarities, related_product_indices
 
@@ -56,8 +64,7 @@ class NaturalLanguageProcessor:
     def vectorize(self, input):
         vectorizer = TfidfVectorizer()
         vector = vectorizer.fit_transform(input)
-        feature_names = vectorizer.get_feature_names_out()
-        return vector, feature_names
+        return vector
 
     # Convert an array of strings to a single string
     def array_to_string(self, array):
