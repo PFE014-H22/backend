@@ -18,6 +18,7 @@ class NaturalLanguageProcessor:
                 self.preprocessed_dataset)
 
     def train(self, dataset, id_dict):
+        self.id_dict = id_dict
         self.preprocessed_dataset = self.preprocess(dataset)
         self.model = TfidfVectorizer().fit(self.preprocessed_dataset)
         self.model_vectors = self.model.transform(self.preprocessed_dataset)
