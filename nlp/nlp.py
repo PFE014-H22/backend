@@ -7,7 +7,6 @@ import contractions
 
 
 class NaturalLanguageProcessor:
-    # TODO: Read/Write dataset/model to file
 
     def __init__(self, dataset=None, id_dict=None):
         if dataset is not None:
