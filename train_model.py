@@ -9,7 +9,7 @@ def train_model(
     output_path: str
 ):
 
-    reader = csv.reader(open(csv_path, 'r'))
+    reader = csv.reader(open(csv_path, 'r', encoding='utf8'))
     next(reader)
     text_columns = [3, 4]
     dataset = []
