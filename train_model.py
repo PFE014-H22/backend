@@ -23,12 +23,10 @@ def train_model(
         text = list(row[i] for i in text_columns)
 
         id_dict[index] = text[0]
-        # ici on aurait un call vers le module tf-idf avec le text en param
         # on combine le titres et le body pour l'instant
         data = f'{text[1]} {text[2]}'
         dataset.append(data)
         index += 1
-        # vector = [1, 2, 3, 4, 5]
 
     print("Training model...")
     nlp.train(dataset, id_dict)

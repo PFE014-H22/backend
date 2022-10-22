@@ -30,7 +30,7 @@ def answers(question_id: int) -> Response:
 
 
 @app.route("/search", methods=['GET'])
-def hello_there():
+def search():
     query = request.args.get("q", default="", type=str)
     print(f"GET /search?q={query}")
 
@@ -41,16 +41,18 @@ def hello_there():
 
     question_ids = [nlp.id_dict[index] for index in related_indexes]
     answers = []
-    for i in range(len(question_ids)):
-        answer = get_answers(question_ids[i])[0]
-        answer = {
-            "question_id": question_ids[i],
-            "answer_id": answer["answer_id"],
-            "is_accepted": answer["is_accepted"],
-            "link": answer["link"],
-            "similarity_score": similarity_scores[i]
-        }
-        answers.append(answer)
+    for i, question_id in enumerate(question_ids):
+        data = get_answers(question_id)
+        if data:
+            answer = data[0]
+            answer = {
+                "question_id": question_id,
+                "answer_id": answer["answer_id"],
+                "is_accepted": answer["is_accepted"],
+                "link": answer["link"],
+                "similarity_score": similarity_scores[i]
+            }
+            answers.append(answer)
 
     response = {
         "answers": answers,

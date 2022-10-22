@@ -33,7 +33,16 @@ class NaturalLanguageProcessor:
 
     # Preprocess a dataset. Takes str list as input.
     def preprocess(self, input):
-        return [self.lemmatize(self.array_to_string(self.remove_stop_words(self.expand_contractions(sentence.lower())))) for sentence in input]
+        output = []
+        for sentence in input:
+            sentence = sentence.lower()
+            sentence = self.expand_contractions(sentence)
+            sentence = self.remove_stop_words(sentence)
+            sentence = self.array_to_string(sentence)
+            sentence = self.lemmatize(sentence)
+            output.append(sentence)
+
+        return output
 
     # Expand contractions
     def expand_contractions(self, input):
