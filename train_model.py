@@ -8,10 +8,19 @@ def train_model(
     csv_path: str,
     output_path: str
 ):
+    """Trains a nlp model using the NaturalLanguageProcessor class.
+
+    Args:
+        csv_path (str): Path to CSV file containing raw dataset.
+        output_path (str): Path where pickled model object will we saved.
+    """
 
     reader = csv.reader(open(csv_path, 'r', encoding='utf8'))
+    # Header row is skipped
     next(reader)
+    # ID, Title and Body columns are selected
     text_columns = [0, 3, 4]
+
     dataset = []
     id_dict = {}
     index = 0
@@ -19,18 +28,20 @@ def train_model(
 
     print("Reading CSV...")
     for row in reader:
-        # ici on recois une liste avec le titre en position 0 et le body en position 1
+        # For each row, a list containing the ID, title and body is created.
         text = list(row[i] for i in text_columns)
-
+        # ID is used to populate dictionnary
         id_dict[index] = text[0]
-        # on combine le titres et le body pour l'instant
+        # Title and Body are combined into a single string.
         data = f'{text[1]} {text[2]}'
         dataset.append(data)
         index += 1
 
+    # Model is trained.
     print("Training model...")
     nlp.train(dataset, id_dict)
 
+    # Existing model file is replaced.
     if os.path.exists(output_path):
         os.remove(output_path)
 
