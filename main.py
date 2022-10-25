@@ -2,11 +2,13 @@ import pickle
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from requests import Response
+from config_parameters.cassandra.fetch_cassandra_parameters import find_parameter
 from nlp.nlp import NaturalLanguageProcessor
 from src.answers import get_answers
 
 # Path to the pre-trained model
 MODEL_PATH = "./BD/model.pickle"
+CASSANDRA_PARAMETER_FILE = "./config_parameters/cassandra/cassandra_parameters.txt"
 
 # Model is loaded into NLP object
 print("Loading model...")
@@ -71,7 +73,8 @@ def search():
                 "answer_id": answer["answer_id"],
                 "is_accepted": answer["is_accepted"],
                 "link": answer["link"],
-                "similarity_score": similarity_scores[i]
+                "similarity_score": similarity_scores[i],
+                "parameters": find_parameter(answer["body"], CASSANDRA_PARAMETER_FILE)
             }
             answers.append(answer)
 
