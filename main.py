@@ -2,18 +2,19 @@ import pickle
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from requests import Response
-from config_parameters.cassandra.fetch_cassandra_parameters import find_parameter
+from src.config_parameters.cassandra.fetch_cassandra_parameters import find_parameter
+from src.SO.answers import get_answers
 from nlp.nlp import NaturalLanguageProcessor
-from src.answers import get_answers
+
 
 # Path to the pre-trained model
 MODEL_PATH = "./BD/model.pickle"
-CASSANDRA_PARAMETER_FILE = "./config_parameters/cassandra/cassandra_parameters.txt"
+CASSANDRA_PARAMETER_FILE = "./src/config_parameters/cassandra/cassandra_parameters.txt"
 
 # Model is loaded into NLP object
 print("Loading model...")
 with open(MODEL_PATH, 'rb') as file:
-    nlp: NaturalLanguageProcessor = pickle.load(file)
+    processor: NaturalLanguageProcessor = pickle.load(file)
 print("Model loaded")
 
 load_dotenv()
@@ -57,12 +58,12 @@ def search():
     print(f"GET /search?q={query}")
 
     # Model is used to determine questions sorted by highest similarity to query and similarity scores
-    cosine_similarities, related_indexes = nlp.search(query)
+    cosine_similarities, related_indexes = processor.search(query)
     similarity_scores = [cosine_similarities[index]
                          for index in related_indexes]
 
     # Corresponding answers to each similar questions are fetched
-    question_ids = [nlp.id_dict[index] for index in related_indexes]
+    question_ids = [processor.id_dict[index] for index in related_indexes]
     answers = []
     for i, question_id in enumerate(question_ids):
         data = get_answers(question_id)
