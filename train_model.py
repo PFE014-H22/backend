@@ -41,19 +41,20 @@ def train_model(
     print("Training model...")
     nlp.train(dataset, id_dict)
 
+    print("Saving model file...")
     # Existing model file is replaced.
     if os.path.exists(output_path):
         os.remove(output_path)
 
-    print("Saving model file...")
     with open(output_path, 'wb') as output:
         pickle.dump(nlp, output, pickle.HIGHEST_PROTOCOL)
 
 
-QUERY_RESULTS_PATH = "./BD/QueryResults.csv"
-MODEL_PATH = "./BD/model.pickle"
+if __name__ == "__main__":
+    QUERY_RESULTS_PATH = "BD/QueryResults.csv"
+    MODEL_PATH = "BD/model.pickle"
 
-train_model(
-    csv_path=QUERY_RESULTS_PATH,
-    output_path=MODEL_PATH
-)
+    train_model(
+        csv_path=QUERY_RESULTS_PATH,
+        output_path=MODEL_PATH
+    )
