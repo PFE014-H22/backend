@@ -5,7 +5,7 @@ import time
 import pandas as pd
 
 input_path = "../BD/QueryResults.csv"
-output_path="./BD/UpdatedResults.csv"
+output_path="../BD/UpdatedResults.csv"
 
 df_csv = pd.read_csv(input_path)
 
@@ -67,6 +67,8 @@ print(len(new_questions))
 print(counter)
 
 print(len(df_csv))
+
+# sorted_questions = sorted(new_questions, key=itemgetter('creation_date'))
 
 for question in new_questions:
     # to_add = pd.Series([str(question['question_id']), str(question['accepted_answer_id']), str(question['creation_date']), question['title'], question['body'], question['tags']], index=list(df_csv.columns))
