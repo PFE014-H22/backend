@@ -4,7 +4,8 @@ import requests
 
 def get_answers(question_id: int):
     params = {}
-    params["filter"] = environ["STACK_OVERFLOW_ANSWERS_FILTER"]
+    params["filter"] = environ.get("STACK_OVERFLOW_ANSWERS_FILTER")
+    params["key"] =environ.get("STACK_EXCHANGE_API_KEY")
     params["order"] = "desc"
     params["site"] = "stackoverflow"
     params["sort"] = "activity"
