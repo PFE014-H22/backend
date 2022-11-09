@@ -7,6 +7,9 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    environment:
+      - STACK_OVERFLOW_ANSWERS_FILTER=!6VvPDzQywl)na
+      - STACK_EXCHANGE_API_KEY=4dKjXjKDIyAW)*3knpuW3g((
     ports:
       - 3001:3001
     volumes:
