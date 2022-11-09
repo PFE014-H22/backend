@@ -9,6 +9,7 @@ from nlp.nlp import NaturalLanguageProcessor
 from src.config_parameters.cassandra.fetch_cassandra_parameters import \
     find_parameter
 from src.SO.answers import get_answers
+from src.config_parameters.technologies import get_all_technologies
 
 # Path to the pre-trained model
 MODEL_PATH = "./BD/model.pickle"
@@ -48,6 +49,18 @@ def answers(question_id: int) -> Response:
     print(f"GET /answers/{question_id}")
     answers = get_answers(question_id)
     return jsonify(answers)
+
+
+@app.route("/technologies", methods=['GET'])
+def technologies() -> Response:
+    """Fetches all available technologies to search from.
+
+    Returns:
+        Response: List of technologies.
+    """
+    print(f"GET /technologies")
+    technologies = get_all_technologies()
+    return jsonify(technologies)
 
 
 @app.route("/search", methods=['GET'])
