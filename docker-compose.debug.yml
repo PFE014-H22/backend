@@ -11,4 +11,4 @@ services:
       - 3000:3000
       - 5678:5678
     environment:
-      - FLASK_APP=src/main.py
+      - FLASK_APP=main.py
