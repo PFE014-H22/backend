@@ -136,7 +136,7 @@ print(len(list_to_add))
 print(len(df_csv))
 
 #add questions to the Dataframe before overwriting csv
-for question in new_questions:
+for question in list_to_add:
     to_add = {
         'Id': str(question['question_id']),
         'AcceptedAnswerId': str(question['accepted_answer_id']),
@@ -155,7 +155,7 @@ print(len(df_csv))
 
 df_csv.to_csv(output_path, index=False)
 
-#insert new updated timestamp
+# insert new updated timestamp
 exec_str = "INSERT INTO UpdateStamp VALUES(" + str(current_time) + ");"
 res = cur.execute(exec_str)
 con.commit()
