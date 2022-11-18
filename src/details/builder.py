@@ -5,37 +5,25 @@ from src.details.similarity_score_strategy import SimilarityScoreStrategy
 
 
 class DetailsBuilder:
-    def __init__(self, data: list):
+    def __init__(self,  data: list, parameter_name: str, parameter_description: str, similarity_score_strategy: SimilarityScoreStrategy, keys_list: List[str]):
         self.data = data
-
-    def for_keys_list(self, keys_list: List[str]):
-        self.keys_list = keys_list
-        return self
-
-    def for_parameter_name(self, parameter_name: str):
         self.parameter_name = parameter_name
-        return self
-
-    def for_parameter_description(self, parameter_description: str):
         self.parameter_description = parameter_description
-        return self
-
-    def with_similarity_score_strategy(self, similarity_score_strategy: SimilarityScoreStrategy):
         self.similarity_score_strategy = similarity_score_strategy
-        return self
+        self.keys_list = keys_list
 
     def build(self):
         return {
             "parameter": {
                 "name": self.parameter_name,
                 "description": self.parameter_description,
-                "matches": self.get_number_matches()
+                "matches": self._get_number_matches()
             },
-            "similarity_score": self.get_similarity_score(),
-            "sources": self.get_sources(),
+            "similarity_score": self._get_similarity_score(),
+            "sources": self._get_sources(),
         }
 
-    def create_source(self, item: any):
+    def _create_source(self, item: any):
         source = {}
 
         for key in self.keys_list:
@@ -43,19 +31,19 @@ class DetailsBuilder:
 
         return source
 
-    def get_number_matches(self):
+    def _get_number_matches(self):
         return len(self.data)
 
-    def get_sources(self):
+    def _get_sources(self):
         sources = []
 
         for item in self.data:
-            source = self.create_source(item)
+            source = self._create_source(item)
             sources.append(source)
 
         return sources
 
-    def get_similarity_score(self):
+    def _get_similarity_score(self):
         if self.similarity_score_strategy is SimilarityScoreStrategy.HIGHEST:
             item = max(self.data, key=itemgetter("similarity_score"))
             return item.get("similarity_score")

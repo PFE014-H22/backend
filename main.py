@@ -93,6 +93,7 @@ def search():
             "question_title": question["question_title"],
             "response_body": question["response_body"],
             "similarity_score": similarity_score,
+            "source_name": get_data_source(question["link"]),
             "tags": question["tags"],
         }
         questions.append(new_question)
@@ -104,13 +105,16 @@ def search():
     answers = []
 
     for parameter in aggregated_data:
-        highest_score = SimilarityScoreStrategy.HIGHEST
-        builder = DetailsBuilder(aggregated_data.get(parameter))
-        builder = builder.for_parameter_name(parameter)
-        builder = builder.for_parameter_description("lorem ipsum")
-        builder = builder.for_keys_list(['answer_id',  'link',  'question_body', 'question_id',
-                                        'question_title', 'response_body', 'similarity_score', 'source_name', 'tags'])
-        builder = builder.with_similarity_score_strategy(highest_score)
+        builder = DetailsBuilder(
+            aggregated_data.get(parameter), 
+            parameter, 
+            "lorem ipsum", 
+            SimilarityScoreStrategy.HIGHEST,
+            [
+                'answer_id',  'link',  'question_body', 'question_id',
+                'question_title', 'response_body', 'similarity_score', 'source_name', 'tags'
+            ]
+        )
         answer = builder.build()
         answers.append(answer)
 

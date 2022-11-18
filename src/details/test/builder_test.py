@@ -67,13 +67,16 @@ class BuilderTest(unittest.TestCase):
         }
 
         for parameter in self.data:
-            highest_score = SimilarityScoreStrategy.HIGHEST
-            builder = DetailsBuilder(self.data[parameter])
-            builder = builder.for_parameter_name(parameter)
-            builder = builder.for_parameter_description("lorem ipsum")
-            builder = builder.for_keys_list(['answer_id',  'link',  'question_body', 'question_id',
-                                            'question_title', 'response_body', 'similarity_score', 'source_name', 'tags'])
-            builder = builder.with_similarity_score_strategy(highest_score)
+            builder = DetailsBuilder(
+                self.data[parameter], 
+                parameter, 
+                "lorem ipsum", 
+                SimilarityScoreStrategy.HIGHEST,
+                [
+                    'answer_id',  'link',  'question_body', 'question_id', 'question_title', 
+                    'response_body', 'similarity_score', 'source_name', 'tags'
+                ]
+            )
             answers = builder.build()
             self.assertEqual(expected_answers, answers)
 
