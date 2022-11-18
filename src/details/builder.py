@@ -1,4 +1,5 @@
 from operator import itemgetter
+from typing import List
 
 from src.details.similarity_score_strategy import SimilarityScoreStrategy
 
@@ -7,7 +8,7 @@ class DetailsBuilder:
     def __init__(self, data: list):
         self.data = data
 
-    def for_keys_list(self, keys_list: list[str]):
+    def for_keys_list(self, keys_list: List[str]):
         self.keys_list = keys_list
         return self
 
@@ -36,10 +37,10 @@ class DetailsBuilder:
 
     def create_source(self, item: any):
         source = {}
-        
+
         for key in self.keys_list:
             source[key] = item.get(key, None)
-        
+
         return source
 
     def get_number_matches(self):
