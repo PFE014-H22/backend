@@ -7,22 +7,26 @@ class DetailsBuilder:
     def __init__(self, data: list):
         self.data = data
 
-    def for_parameter(self, parameter: str):
-        self.parameter = parameter
+    def for_keys_list(self, keys_list: list[str]):
+        self.keys_list = keys_list
+        return self
+
+    def for_parameter_name(self, parameter_name: str):
+        self.parameter_name = parameter_name
         return self
 
     def for_parameter_description(self, parameter_description: str):
         self.parameter_description = parameter_description
         return self
 
-    def with_similarity_score_strategy(self, strategy: SimilarityScoreStrategy):
-        self.similarity_score_strategy = strategy
+    def with_similarity_score_strategy(self, similarity_score_strategy: SimilarityScoreStrategy):
+        self.similarity_score_strategy = similarity_score_strategy
         return self
 
     def build(self):
         return {
             "parameter": {
-                "name": self.parameter,
+                "name": self.parameter_name,
                 "description": self.parameter_description,
                 "matches": self.get_number_matches()
             },
@@ -32,16 +36,10 @@ class DetailsBuilder:
 
     def create_source(self, item: any):
         source = {}
-        source["answer_id"] = item.get("answer_id", -1)
-        source["is_accepted"] = item.get("is_accepted", False)
-        source["link"] = item.get("link", "")
-        source["name"] = item.get("name", "")
-        source["question_body"] = item.get("question_body", "")
-        source["question_id"] = item.get("question_id", "")
-        source["question_title"] = item.get("question_title", "")
-        source["response_body"] = item.get("response_body", "")
-        source["similarity_score"] = item.get("similarity_score", -1)
-        source["tags"] = item.get("tags", [])
+        
+        for key in self.keys_list:
+            source[key] = item.get(key, None)
+        
         return source
 
     def get_number_matches(self):
