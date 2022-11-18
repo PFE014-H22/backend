@@ -1,4 +1,4 @@
-Id,AcceptedAnswerId,CreationDate,Title,Body,Tags,AnswerBody
+Id,AcceptedAnswerId,CreationDate,Title,Body,Tags,AnswerBody,Params
 3138738,3139627,2010-06-29 07:39:11,is there any trick to do wildcards search on apache cassandra?,"<p>i need to do something like this on apache cassandra,
 SELECT * FROM mytable where address = ""%indonesia%""</p>
 
@@ -8,7 +8,7 @@ SELECT * FROM mytable where address = ""%indonesia%""</p>
 <p>I would recommend to use ""Supercolumn index"" or use a order preserving partitioner (e.g. org.apache.cassandra.dht.OrderPreservingPartioner) in conjunction with range queries. </p>
 
 <p>Take a look at <a href=""http://www.slideshare.net/benjaminblack/cassandra-basics-indexing"" rel=""nofollow noreferrer"">the slides</a> from Benjamin Black's excellent talk about cassandra and index</p>
-"
+",['partitioner']
 5100782,5102518,2011-02-24 05:35:31,cassandra upgrade from 0.6 to 0.7.2,"<p>I followed the instructions in NEWS.txt to upgrade cassandra 0.6 to 0.7.2. 
 The instructions are: 
     The process to upgrade is: 
@@ -29,7 +29,7 @@ I start cassandra 0.7.2 using: ""bin/cassandra -f"". But it always complains the
 <p>""Fatal configuration error 
 org.apache.cassandra.config.ConfigurationException: saved_caches_directory missing"" </p>
 ",<upgrade><cassandra>,"<p>Default location for saved_caches_directory is /var/lib/cassandra/saved_caches (From <a href=""http://wiki.apache.org/cassandra/StorageConfiguration"" rel=""nofollow"">wiki</a>). Try to create that manually (dont forget user permissions)</p>
-"
+",['saved_caches_directory']
 5534713,5539325,2011-04-04 04:57:55,Cassandra startup problem: Attempt to assign id to existing column family,"<p>I'm using <strong>cassandra 0.7.4</strong> on centos5.5 x86_64 with jdk-1.6.0_24 64-Bit.
  When I restart it , it throw out:</p>
 
@@ -69,14 +69,14 @@ Caused by: org.apache.cassandra.config.ConfigurationException: Attempt to assign
 <p>So, the answer is: don't do that.</p>
 
 <p>To recover, you should set initial_token in cassandra.yaml to your node's current token (which you can see with ""nodetool ring""), then delete the system keyspace and restart. Then you'll need to recreate your columnfamily definitions, but your data will not be affected.</p>
-"
+",['initial_token']
 6292734,6307553,2011-06-09 12:25:02,Fetching key range with common prefix in Cassandra,"<p>I want to fetch all rows having a common prefix using hector API. I played with RangeSuperSlicesQuery a bit but didn't find a way to get it working properly. Does key range parameters work with wild cards etc? </p>
 
 <p>Update: I used ByteOrderedPartitioner instead of RandomPartitioner and it works fine with that. Is this the expected behavior?</p>
 ",<cassandra><hector>,"<p>Yes, that's the expected behavior. In RandomPartitioner, rows are stored in the order of the MD5 hash of their keys, so to get a meaningful range of keys, you need to use an order preserving partitioner like ByteOrderedPartitioner.</p>
 
 <p>However, there are downsides to using <a href=""http://ria101.wordpress.com/2010/02/22/cassandra-randompartitioner-vs-orderpreservingpartitioner/"" rel=""noreferrer"">ByteOrderedPartitioner or OrderPreservingPartitioner</a> that you can usually avoid with a slightly different data model and RandomPartitioner.  </p>
-"
+",['partitioner']
 6433842,6436258,2011-06-22 01:14:33,"Cassandra 0.8 = What kind of ""Row Count"" features are provided?","<p>are ""Row Counts"" (in a CF) in Cassandra meanwhile supported for </p>
 
 <p>a) RAndomPartitioner ?</p>
@@ -100,7 +100,7 @@ Caused by: org.apache.cassandra.config.ConfigurationException: Attempt to assign
 <p><a href=""http://cassandra-user-incubator-apache-org.3065146.n2.nabble.com/Count-rows-td5420889.html"" rel=""nofollow"">http://cassandra-user-incubator-apache-org.3065146.n2.nabble.com/Count-rows-td5420889.html</a></p>
 
 <p>I would suggest, as you add new rows to a column family, simply increment +1 a counter CF/row/key and you wont have to page through all of the rows (as the link above says, what if you have billions?) -- This also allows you to not care which partitioner you use ... </p>
-"
+",['partitioner']
 6909826,6910417,2011-08-02 09:22:05,Sort by key in Cassandra,"<p>Let's assume I have a keyspace with a column family that stores user objects and the key of these objects is the username.</p>
 
 <p>How can I use Hector to get a list of users sorted by username?</p>
@@ -145,7 +145,7 @@ Caused by: org.apache.cassandra.config.ConfigurationException: Attempt to assign
 <p>This answer is very old now.</p>
 
 <p>It is a system-wide setting. You can set in <code>cassandra.yaml</code>. See <a href=""http://www.datastax.com/docs/1.1/configuration/node_configuration#partitioner"" rel=""nofollow noreferrer"">this doc</a>. Again, OPP is highly discouraged. This document is for version 1.1, and you can see <em>it is deprecated</em>. It is likely that it is removed from latest version. If you do want to use OPP, you may want to revisit the architecture the architecture.</p>
-"
+",['partitioner']
 7237271,7251868,2011-08-29 23:46:12,Large scale data processing Hbase vs Cassandra,"<p>I am nearly landed at Cassandra after my research on large scale data storage solutions. But its generally said that Hbase is better solution for large scale data processing and analysis. </p>
 
 <p>While both are same key/value storage and both are/can run (Cassandra recently) Hadoop layer then what makes Hadoop a better candidate when processing/analysis is required on large data.</p>
@@ -172,7 +172,7 @@ Caused by: org.apache.cassandra.config.ConfigurationException: Attempt to assign
 <li><p>There are advantages to both peer to peer and master to slave. The master - slave setup generally makes it easier to debug and reduces quite a bit of complexity.</p></li>
 <li><p>HBase is not tied to only traditional HDFS, you can change out your underlying storage depending on your needs. <a href=""http://www.mapr.com/"" rel=""noreferrer"">MapR</a> looks quite interesting and I have heard good things although I have not used it myself.</p></li>
 </ul>
-"
+",['partitioner']
 7578609,7587875,2011-09-28 05:11:18,"cassandra secondary index return results in lexical rowkey order, even with RandomPartitioner?","<p>As far as I understand, a Cassandra secondary index is stored as an internal CF, where the rowkeys are the values within the index, and the columns are rowkeys back to the original CF being indexed.</p>
 
 <p>Is it possible to have the columns of the index store the original CF rowkey values? Then, since columns within the index row are sorted, a query for a particular value in the index theoretically could return rowkeys in sorted value order.</p>
@@ -243,12 +243,12 @@ RowKey: 0a
 ",<cassandra>,"<p>The reason you can't do this is, the index ordering has to match the partitioner ordering, or you couldn't ""page"" through resultsets across multiple nodes (without having to do scatter/gather for each query, anyway).</p>
 
 <p>We do have <a href=""https://issues.apache.org/jira/browse/CASSANDRA-1599"" rel=""nofollow"">https://issues.apache.org/jira/browse/CASSANDRA-1599</a> open to allow custom ordering, so you should watch that issue for updates.</p>
-"
+",['partitioner']
 8793430,8834951,2012-01-09 18:41:04,"For Cassandra, how should the historical data be taken care of?","<p>Say I have a dozen CF/SCF and have the write traffic keeps coming (might have spikes). Over the time, a few of them will growing much faster (due to their own nature) than others and data table could be huge. At that stage, should they still be sitting on the same disk as the other CF/SCF? what if the disk is almost full due to the large amount of store data? or should we consider introducing additional CF/SCF for storing historical data?</p>
 
 <p>In general, what's the best practices that we need follow to take care of the historical data? </p>
 ",<cassandra><database-backups><historical-db>,"<p>The size of the CF isn't really the issue, as the keys are replicated and spread based on the # of nodes, the token selection per node, the partitioner selected and the replication strategy -- all configurable for a keyspace.  </p>
-"
+",['partitioner']
 10407072,10407149,2012-05-02 02:49:50,Cassandra seed nodes and clients connecting to nodes,"<p>I'm a little confused about Cassandra seed nodes and how clients are meant to connect to the cluster. I can't seem to find this bit of information in the documentation.</p>
 
 <p>Do the clients only contain a list of the seed node and each node delegates a new host for the client to connect to? Are seed nodes only really for node to node discovery, rather than a special node for clients?</p>
@@ -295,7 +295,7 @@ RowKey: 0a
 </blockquote>
 
 <p>I gather that the pool of nodes that a client connects to can just be a handful of (random?) nodes in the DC to allow for potential failures.</p>
-"
+",['partitioner']
 11014014,11019631,2012-06-13 11:34:47,get column position,"<p>In CassandraDB, using an ordered column family. I know you can get slices, but can you get the position. For example, in this datamodel I save scores like this:</p>
 
 <pre><code>""Scores"":
@@ -344,7 +344,7 @@ RowKey: 0a
 <p>The ScoreTotals CF would be used with counter columns to increment/decrement the value each time a user achieves that score.  If you have additional granularity in your scores (like 910 vs an even 900) you can consider the keys as buckets with column names as specific scores. PlayerScores obviously exists so you can query a score for a player.</p>
 
 <p>You can then determine ranking by simply summing the totals of all scores greater than that of the player.  Since scores are stored in column names, you can use a standard slice query to get your range without needing to use an order-preserving partitioner (which has some negative side effects).</p>
-"
+",['partitioner']
 11659001,11659796,2012-07-25 21:35:50,Cassandra-cli cant connect to remote cassandra server,"<p>I have a cassandra server running on a server(serv1). cassandra-cli can connect to it when run on serv1. However, when i try to connect to it through some other server(serv2), i get the following exception:</p>
 
 <pre><code>org.apache.thrift.transport.TTransportException: java.net.ConnectException: Connection refused
@@ -375,7 +375,7 @@ Exception connecting to jckstore/9160. Reason: Connection refused.
 </ol>
 
 <p>Then I can access.</p>
-"
+","['rpc_address', 'broadcast_rpc_address']"
 11707073,11716462,2012-07-29 06:03:24,how to efficiently manage cassandra initial token?,"<p>I'm new cassandra user. I know that there is initial token configuration and how to generate it.
 The question is if I have an existen cluster with x nodes and I want to add additional node (one or more) should I reconfigure all the nodes to the new tokens (according to new  generated values)?  </p>
 
@@ -394,7 +394,7 @@ The question is if I have an existen cluster with x nodes and I want to add addi
 </blockquote>
 
 <p>If you were seeking a management solution <a href=""https://github.com/netflix/priam"">Priam (from Netflix)</a> might be worth looking at. It's open source and Apache-licensed, but requires some amount of configuration and is probably only worth investing [time] in for larger clusters.</p>
-"
+",['initial_token']
 13110363,13121756,2012-10-28 15:52:30,One to Many equivalent in Cassandra and data model optimization,"<p>I am modeling my database in Cassandra, coming from RDBMS. I want to know how can I create a one-to-many relationship which is embedded in the same Column Name and model my table to fit the following query needs.</p>
 
 <p>For example:</p>
@@ -495,7 +495,7 @@ SELECT item, name, size FROM boxes WHERE id = 23442;
 </code></pre>
 
 <p><em>However, this provides no guarantees of correctness</em>.  For example, this model makes it possible for items of the same box to have different users, or titles.  And, since this makes <code>boxes</code> a counter column family, it limits how you can evolve the schema in the future.</p>
-"
+",['partitioner']
 13219270,13270710,2012-11-04 14:09:40,Dynamically adding new nodes in Cassandra,"<p>Is it possible to add new hosts to a Cassandra cluster dynamically?</p>
 
 <p>What I'm trying to do is set up a program that can:</p>
@@ -518,7 +518,7 @@ SELECT item, name, size FROM boxes WHERE id = 23442;
 <p>For seeds you can configure a custom seed provider. Look at the <a href=""https://github.com/Netflix/Priam/blob/master/priam-cass-extensions/src/main/java/com/netflix/priam/cassandra/extensions/NFSeedProvider.java"" rel=""nofollow"">seed provider used for Netflix's Priam</a> for some ideas how to implement it</p>
 
 <p>The most difficult part will be managing the tokens assigned to each node in a efficient way. Cassandra 1.2 is around the corner and will include a feature called virtual nodes that, IMO, will work well in your case. See the <a href=""http://www.youtube.com/watch?v=GddZ3pXiDys"" rel=""nofollow"">Acunu presentation about it</a></p>
-"
+",['rpc_address']
 13838990,13842356,2012-12-12 11:41:59,Implementing FIFO read in Cassandra,"<p>Given a Cassandra database, is there a mechanism for fetching records in a FIFO manner such that records can be read in the ascending order of their insertion time. I basically need to read N oldest rows in batches, process them and delete the batch once it is processed. </p>
 
 <p>As far as my understanding goes, Columns are sorted by their type (as specified by CompareWith), and rows are sorted by their partitioner. </p>
@@ -553,7 +553,7 @@ SELECT item, name, size FROM boxes WHERE id = 23442;
 <li><p>I wouldn't use TimeUUIDType as your comparator, just a long value that's either the Unix epoch or a numeric representation of time in the form of YYYYMMDDxx to the level of precision you need.  You can decide at query time whether you want the values in normal (ascending) or reversed (descending) order.</p></li>
 <li><p>You can ask for all keys and simply take the smallest one, which could work fine or be a terrible idea depending on how many you have and your latency requirements.  Alternatively (and certainly more efficient), you could actually write the oldest key somewhere (a file, another CF, in memory, whatever makes sense).</p></li>
 </ol>
-"
+",['precision']
 13882313,13883307,2012-12-14 16:09:30,Cassandra - Understanding Rack Concept on PropertyFileSnitch example,"<p>I am working on multi DC deployment and one thing is not clear to me - this is the rack concept interpretation from Cassandra perspective.</p>
 
 <p>I can enforce replication order by defining proper key ranges. Why do I need to specify racks additionally in <code>cassandra-topology.properties</code> ? </p>
@@ -562,7 +562,7 @@ SELECT item, name, size FROM boxes WHERE id = 23442;
 
 <p>If I have replication factor 3, and my row key is stored on Node 1, than replicas will be stored on Node 2 and 3 - this is obvious when we look on ring structure, so... why do I need to duplicate this information in rack configuration?</p>
 ",<cassandra>,"<p>The rack configuration allows cassandra to optimize replica placement so you have better fault tolerance properties.  If you have all your replicas in rack 1, and that rack goes down, you'll lose the data.  If you tell Cassandra about your rack configuration it will keep replicas on different racks.</p>
-"
+",['rack']
 14105992,14106468,2012-12-31 20:54:40,Hadoop and Cassandra processing rows in sorted order,"<p>I want to fill a Cassandra database with a list of strings that I then process using Hadoop. What I want to do it run through all the strings in order using a Hadoop cluster and record how much overlap there is between each string in order to find the Longest Common Substring. </p>
 
 <p>My question is, will the InputFormat object allow me to read out the data in a sorted order or will my strings be read out ""randomly"" (according to how Cassandra decides to distribute them) throughout every machine in the cluster? Is the MapReduce process designed to process each row by itself w/out the intent of looking at two rows consecutively like I'm asking for?</p>
@@ -571,7 +571,7 @@ SELECT item, name, size FROM boxes WHERE id = 23442;
 <p>If you want sorted order, you should use an identity mapper (one that does nothing) whose output key is the string itself. Then they will be sorted before passed to the reduce step. But it gets a little more complicated since you can have more than one reducer. With only one reducer, everything is globally sorted. With more than one, each reducer's input is sorted, but the input across reducers might not be sorted. That is, adjacent strings might not go to the same reducer. You would need a custom partitioner to handle that.</p>
 
 <p>Lastly, you mentioned that you're doing longest common substring- are you looking for the longest substring among each pair of strings? Among consecutive pairs of strings? Among all strings? Each of these possibilities will affect how you need to structure your MapReduce job.</p>
-"
+",['partitioner']
 14407468,14408108,2013-01-18 20:55:11,Cassandra CQL time range query,"<p>I have a Cassandra column family where I am storing a large number (hundreds of thousands) of events per month with timestamp (“Ymdhisu”) as the row key. It has multiple columns capturing some data for each event. I tried retrieving events data for a specific time range. For example for the month of Jan, I used the following CQL query:</p>
 
 <p>a) Query between range Jan 1- Jan 15, 2013</p>
@@ -607,7 +607,7 @@ I am dealing with at least 100-200K rows of data monthly in this column family. 
 ",<nosql><cassandra><bigdata><cql>,"<p>You can create secondary indexes such as ""Date"" and ""Month"", and store each event's Date and Month in those columns along with other data. When querying data, you can fetch all rows for specified months or days.</p>
 
 <p>I dont think range query on Keys will work. Perhaps if you change your partitioner from RandomPartitioner to ByteOrderedPartitioner?</p>
-"
+",['partitioner']
 15865710,15875434,2013-04-07 17:50:58,Cassandra RandomPartitioner on version 1.2.3,"<p>Im installing Cassandra 1.2.3 on debian using apt, I was previously using a tarball 1.1.7 install.  After install i'm changing the partitioner from Murmur3Partitioner to RandomPartitioner in cassandra.yaml as follows:</p>
 
 <p>partitioner: org.apache.cassandra.dht.RandomPartitioner</p>
@@ -629,7 +629,7 @@ Service exit with a return value of 1</p>
 <p>If you're trying to upgrade your data from your 1.1 install, Cassandra isn't reading from the right place.  Adjust your data directory to use your 1.1 directory and it should start with partitioner set to RandomPartitioner.</p>
 
 <p>If you're trying to start with no data, stop Cassandra, remove /var/lib/cassandra/* and start it again.  Note you need to remove the commitlog directory as well as the data directory.</p>
-"
+",['partitioner']
 15925549,22273466,2013-04-10 12:16:23,How does cassandra split keyspace data when multiple directories are configured?,"<p>I have configured three separate data directories in cassandra.yaml file as given below:</p>
 
 <pre>
@@ -650,7 +650,7 @@ data_file_directories:
 
 <p>You can read about the thought process behind the development of this issue here:
 <a href=""https://issues.apache.org/jira/browse/CASSANDRA-4292"" rel=""noreferrer"">https://issues.apache.org/jira/browse/CASSANDRA-4292</a></p>
-"
+",['disk_failure_policy']
 16204066,16234121,2013-04-24 23:40:12,Increasing of used space while rebalancing Cassandra cluster,"<p>Just an example: I have 2 Cassandra nodes, 1Gb data per each node, replication factor is 1. I use single column family with Leveled compaction with 100Mb sstable size, like this:</p>
 
 <pre><code>create column family ColFamily with key_validation_class=UTF8Type 
@@ -687,7 +687,7 @@ node3: 113427455640312821154458202477256070484
 <p>In general, if you had more nodes or higher replication factor, you can always do the rebalancing without increasing the data stored on any existing nodes if you run cleanup after each move on the node just moved.</p>
 
 <p>Finally, if you had Cassandra 1.2 and virtual nodes, the tokens can be chosen randomly which gives even load as soon as you add a new node, with no need for any rebalancing (manual or automatic).  This is not only easier, it saves copying a constant fraction of your data around the cluster just to add one node.</p>
-"
+",['initial_token']
 16453411,16471860,2013-05-09 02:32:35,What's the meaning of NodeDiscoveryType as TOKEN_AWARE in Astyanax client?,"<p>I found <code>TOKEN_AWARE</code> enum value in Astyanax client for Cassandra in <a href=""https://github.com/Netflix/astyanax/blob/master/astyanax-core/src/main/java/com/netflix/astyanax/connectionpool/NodeDiscoveryType.java"" rel=""nofollow"">com.netflix.astyanax.connectionpool.NodeDiscoveryType</a> and am trying to understand what it does?</p>
 
 <pre><code>package com.netflix.astyanax.connectionpool;
@@ -860,7 +860,7 @@ DISCOVERY_SERVICE.</li>
 <h2>TLDR;</h2>
 
 <p>In summary, set NodeDiscoveryType to RING_DESCRIBE (if you aren't using a HostSupplier) and ConnectionPoolType to TOKEN_AWARE.  Additionally, use setLocalDatacenter to keep requests local to the dc and consider the latency awareness settings.</p>
-"
+",['dc']
 16532566,16547891,2013-05-13 23:03:28,How to insert a datetime into a Cassandra 1.2 timestamp column,"<p><strong>IMPORTANT</strong>
 If you are dealing with this problem today, use the new cassandra-driver from datastax (i.e. import cassandra) since it solves most of this common problems and don't use the old cql driver anymore, it is obsolete! This question is old from before the new driver was even in development and we had to use an incomplete old library called cql (import cql &lt;-- don't use this anymore, move to the new driver).</p>
 
@@ -937,7 +937,7 @@ cursor.execute (cql_statement, rename_dict)
 <p>You can convert the datetime to a long value containing the number of milliseconds since epoch and that's all, the update is transformed to an equivalent form using a long value for the timestamp.</p>
 
 <p>Hope it helps somebody else</p>
-"
+",['precision']
 16549833,16585376,2013-05-14 18:01:54,Cassandra Commit and Recovery on a Single Node,"<p>I am a newbie to Cassandra - I have been searching for information related to commits and crash recovery in Cassandra on a single node. And, hoping someone can clarify the details.</p>
 
 <p>I am testing Cassandra - so, set it up on a single node. I am using stresstool on datastax to insert millions of rows. What happens if there is an electrical failure or system shutdown? Will all the data that was in Cassandra's memory get written to disk upon Cassandra restart (I guess commitlog acts as intermediary)? How long is this process?</p>
@@ -952,7 +952,7 @@ cursor.execute (cql_statement, rename_dict)
 <p>In the event that your server loses power, on startup Cassandra replays the commit log to rebuild its memtable.  This process will take seconds (possibly minutes) on very write heavy servers.</p>
 
 <p>If you want to ensure that the data in the memtables is written to disk you can run 'nodetool flush' (this operates per node).  This will create a new SSTable and delete the commit logs referring to data in the memtables flushed.</p>
-"
+",['commitlog_sync']
 16922951,16927739,2013-06-04 16:27:26,Get last record in Cassandra,"<p>Have a table with about 20 million rows in Cassandra. </p>
 
 <p>The table is ordered by a <code>primary_key</code> column, which is a string. We are using 'ByteOrderedPartitioner', so the rows are ordered by the <code>primary_key</code> and not a hash of the <code>primary_key</code> column.</p>
@@ -978,7 +978,7 @@ cursor.execute (cql_statement, rename_dict)
 
 <p>Regards,
 Carlo</p>
-"
+",['partitioner']
 17631473,17642791,2013-07-13 15:14:58,Cassandra 1.2: Unable to complete request: one or more nodes were unavailable,"<p>I'm having trouble setting up a new Cassandra cluster. I've set up a 3 node cluster in EC2 (Zone: eu-west-1b). When I try to insert a record into a new table I receive this error message:</p>
 
 <pre><code>cqlsh:test&gt; insert into mytest (id, value) values(1,100);
@@ -1026,7 +1026,7 @@ CREATE TABLE mytest (
   compression={'sstable_compression': 'SnappyCompressor'};
 </code></pre>
 ",<amazon-ec2><cassandra>,"<p>I finally tracked down the problem - I had set the endpoint_snitch to Ec2Snitch, but the default Datastax was set beneath the comments (which I hadn't noticed). I commented out the DS snitch, restarted the dse service on all nodes and ran nodetool repair on each node and the problem went away.</p>
-"
+",['endpoint_snitch']
 18106043,18106777,2013-08-07 14:25:38,Is there a way to discover Cassandra CQL table structure?,"<p>Let's say I use CQL to define this table.</p>
 
 <pre><code>CREATE TABLE songs (
@@ -1095,7 +1095,7 @@ line:</p>
 </ul>
 
 <p>GZ. Now you have cqlsh on windows.</p>
-"
+","['partitioner', 'rack', 'cluster_name']"
 18398987,20334000,2013-08-23 09:07:18,How to reset a lost Cassandra admin user's password?,"<p>I have full access to the Cassandra installation files and a PasswordAuthenticator configured in <code>cassandra.yaml</code>. What do I have to do to reset admin user's password that has been lost, while keeping the existing databases intact?</p>
 ",<cassandra><cassandra-2.0>,"<p>Solved with the following steps:</p>
 
@@ -1113,7 +1113,7 @@ line:</p>
 </code></pre>
 
 <p>and change the password to something else.</p>
-"
+",['authenticator']
 18712650,18729891,2013-09-10 07:10:54,Cassandra: what is the correct configuration for EC2 multi-region?,"<p>What is the correct configuration for a mulit-region setup in EC2 instances?</p>
 
 <p>What should the listen_address, broadcast_address, rpc_address and seed ip/addresses be to work?</p>
@@ -1141,7 +1141,7 @@ line:</p>
 <li>what IPs are accessible? (is this network interface accessible to who is connecting?)</li>
 </ol></li>
 </ol>
-"
+","['listen_address', 'broadcast_address']"
 18842369,18850980,2013-09-17 06:05:10,Cassandra nodetool could not resolve '127.0.0.1': unknown host,"<p>I am very new to cassandra. Just started exploring.</p>
 
 <p>I am running a single node cassandra server &amp; facing a problem in seeing status of the cassandra using nodetool command.</p>
@@ -1194,12 +1194,12 @@ Type 'quit;' or 'exit;' to quit.
 
 <p>Please help.</p>
 ",<cassandra><nodetool>,"<p>try setting actual IP address in  listen_address, rpc_address than localhost</p>
-"
+",['rpc_address']
 18877420,18877486,2013-09-18 16:22:48,Can I have different partitioners in a multiple datacenter configuration in cassandra?,"<p>Can I have RandomPartitioner in the cluster in datacenter1 and Murmur3Partitioner in the cluster in datacenter2?  </p>
 ",<cassandra><partitioner>,"<p>No, you need to have the same partitioner on all nodes in the cluster.</p>
 
 <p>If you are asking this because you want a way of migrating from RandomPartitioner to Murmur3Partitioner then it won't work unfortunately.  I don't know of a method of moving to Murmur3Partitioner  on a live cluster, but the benefit is small so it is unlikely to be worth doing.</p>
-"
+",['partitioner']
 19090855,19091104,2013-09-30 09:32:23,Cassandra write strategy,"<p>I want to write 1 billions rows with 2 connected nodes in Cassandra. I use 8 threads from the clients but I don't know whether I write only in one node or both to have the max performance?
 Thanks</p>
 ",<cassandra>,"<p>It won't matter if you write to one node or both. Whichever node is receiving the updates (called the coordinator node) will partition the data based on the partitioner and distribute the necessary section of data to the other node. So whether the updates goes to 1 node or 2, the same network latency and processing will be carried out overall.</p>
@@ -1207,7 +1207,7 @@ Thanks</p>
 <p>With 8 threads you should see good write performance, as Cassandra is optimized for a write heavy workload.</p>
 
 <p>Here is a good treatment of <a href=""http://www.datastax.com/docs/1.0/cluster_architecture/about_client_requests"" rel=""nofollow"">client requests</a>.</p>
-"
+",['partitioner']
 19143452,19145402,2013-10-02 17:49:55,Datastax Java driver to autodiscover all the nodes for specific datacenter in its connection pool?,"<p>I have recently started using <code>Cassandra</code> in our <code>Production environment</code>. We have a <code>24 node cluster</code> with <code>replication factor of 4</code>. Meaning <code>2 copies</code> will be there in <code>each datacenter</code>. So that means we have a single cross colo cluster with <code>24 nodes</code> which means <code>12 nodes in SLC colo</code> and <code>12 nodes in PHX colo</code>.</p>
 
 <p>I am using <code>Astyanax client</code> currently to write the data in <code>Cassandra database</code>. And I know Astyanax client has this feature to autodiscover all the nodes in PHX colo or SLC colo of cassandra in its connection pooling but not all of the nodes.</p>
@@ -1221,7 +1221,7 @@ Thanks</p>
 ",<java><cassandra><astyanax><datastax-java-driver>,"<p>The driver will discover all the nodes in your cluster, you want to change your load balancing policy in your client code. Specifically you want to use the dc aware load balancing policy.</p>
 
 <p><a href=""http://www.datastax.com/drivers/java/apidocs/com/datastax/driver/core/policies/DCAwareRoundRobinPolicy.html"" rel=""nofollow"">http://www.datastax.com/drivers/java/apidocs/com/datastax/driver/core/policies/DCAwareRoundRobinPolicy.html</a></p>
-"
+",['dc']
 19374143,19997995,2013-10-15 05:53:22,Get rows using first component of composite key using hector client in Cassandra,"<p>I'm using composite datatype in rowkey, column family is as below</p>
 
 <pre><code>create column family CompositeTest
@@ -1324,7 +1324,7 @@ RowKey: s1:
 </code></pre>
 
 <p>With this structure the query you thought it's quite easy, and then you can always slice on the column name to select only those columns inside the interval you want.</p>
-"
+",['partitioner']
 19663884,19666901,2013-10-29 16:25:11,Error trying to connect using Astyanax to Cassandra hosted on a EC2 instance,"<p>I am getting the following error ""astyanax.connectionpool.exceptions.PoolTimeoutException:"" when trying to use client Astyanax  to connect to Cassandra on a EC2 instance. Need help</p>
 
 <pre><code>Following is my code snippet.
@@ -1420,7 +1420,7 @@ Alos check the firewall on the ec2 is turned off. By default its false, but its 
 <p>If you have done this, then your client might be behind a firewall that prevents outbound traffic to your choosen port (9042).</p>
 
 <p>Lastly if you have not used any elastic ip, its better to use the ec2 instance dns name, both in your setSeeds section and in the rpc_address of cassandra.yaml</p>
-"
+",['rpc_address']
 19722075,19722566,2013-11-01 06:47:43,How to generate tokens for my two node Cassandra cluster?,"<p>I am trying to setup two node Cassandra Cluster on windows machine. I have basically two windows machine and I was following this datastax <a href=""http://www.datastax.com/2012/01/how-to-setup-and-monitor-a-multi-node-cassandra-cluster-on-windows"" rel=""nofollow"">tutorial</a></p>
 
 <p>Whenever I use the below command to get the token number from the above tutorial -</p>
@@ -1464,7 +1464,7 @@ node 1: 85070591730234615865843651857942052864
 <p>Which version of Python are you using?  I have tested this script in 2.6.7 and 2.7.3.</p>
 
 <p>Also to be balanced, your initial_token values for a two node cluster simply need to have a difference of 85,070,591,730,234,615,865,843,651,857,942,052,864.  They don't necessarily have to be 0 and 85070591730234615865843651857942052864; although those two values should work just fine.</p>
-"
+",['initial_token']
 19940513,20001792,2013-11-12 21:43:45,Hash value from keys on Cassandra,"<p>I'm developing a mechanism for Cassandra using Hector. 
 What I need at this moment is to know which are the hash values of the keys to look at which node is stored (looking at the tokens of each one), and ask directly this node for the value. What I understood is that depending on the partitioner Cassandra uses, the values are stored independently from one partitioner to other. So, are the hash values of all keys stored in any table? In case not, how could I implement a generic class that once I read from System Keyspace the partitioner that is using Cassandra this class could be an instance of it without the necessity of modifying the code depending on the partitioner? I would need it to call the getToken method to calculate the hash value for a given key.</p>
 ",<hash><cassandra><key><hector><partitioner>,"<p>Finally after testing different implementations I found the way to get the partitioner using the next code:</p>
@@ -1484,7 +1484,7 @@ What I need at this moment is to know which are the hash values of the keys to l
 
     } 
 </code></pre>
-"
+",['partitioner']
 19992430,20012429,2013-11-15 02:28:45,Bring back a dead datacenter: repair or rebuild,"<p>I had Cassandra cluster running across two data centers, for some reason, one data center was taken down for a while, and now I'm planning to bring it back. I'm thinking about two approaches: 
 One is to start up all Cassandra nodes of this data center and run ""nodetool repair "" on each node one by one. But It looks like 'repair' takes long time. I had an experience to repair 6GB data on a node before, it took me 5 hours on one node (3 nodes cluster). I have much more data on the cluster now, can't image how long it will take. 
 So I'm thinking if I can run re-build instead of repair. I can delete all old data on this data center and re-build it as adding a new data center. But not sure if it works and how performance would be. </p>
@@ -1497,7 +1497,7 @@ So I'm thinking if I can run re-build instead of repair. I can delete all old da
 <p>You can create another datacenter, add nodes to it with <code>auto_bootstrap: false</code> and then run <code>nodetool rebuild &lt;live dc name&gt;</code></p>
 
 <p>Good luck!</p>
-"
+",['dc']
 20219934,20220872,2013-11-26 14:34:08,I can't start Cassandra Server in Eclipse( Unknown Commitlog version 4),"<p>I'm trying to run Cassandra in eclipse, but I'm getting this exception</p>
 
 <pre><code>java.lang.IllegalStateException: Unknown commitlog version 4Exception encountered during startup: Unknown commitlog version 4
@@ -1522,7 +1522,7 @@ at org.apache.cassandra.service.CassandraDaemon.main(CassandraDaemon.java:504)
 <blockquote>
   <p>To solve this either change your commitlog_directory or empty your current commitlog dir (default is /var/lib/cassandra/commitlog) </p>
 </blockquote>
-"
+",['commitlog_directory']
 20502001,20552508,2013-12-10 18:05:40,How much load can cassandra handle on m1.xlarge instance?,"<p>I setup 3 nodes of Cassandra (1.2.10) cluster on 3 instances of EC2 m1.xlarge. </p>
 
 <p>Based on default configuration with several guidelines included, like:</p>
@@ -1574,7 +1574,7 @@ REQUEST_RESPONSE          1769
 <li>set larger new generation size; I usually set it to about 800M for a 6 GB heap, to avoid pressure on the tenured gen. </li>
 <li>if you're sure memtable flushing lags behind, make sure sstable compression is enabled - this will reduce amount of data physically saved to disk, at the cost of additional CPU cycles</li>
 </ol>
-"
+",['write_request_timeout']
 20643515,20645781,2013-12-17 19:59:36,Cassandra not balancing data over existing nodes in cluster,"<p>Greeings,
 I have configured 3 node Cassandra 1.2.12 cluster and I am able to connect to master and create keyspaces and tables over all nodes. However, I want to run YCSB over my cluster so when I run YCSB and load data it is all loaded on Master. Since I am loading 1000000 records I calculated initial tokens by dividing that number by number of nodes I have.
 When I run nodetool I get something like:</p>
@@ -1611,7 +1611,7 @@ node 2: 3074457345618258602
 <p>2 - Stop all nodes, delete your data, <a href=""http://www.datastax.com/documentation/cassandra/1.2/webhelp/index.html#cassandra/initialize/initializeSingleDS.html"" rel=""nofollow"">follow these instructions</a>, and reload your data.</p>
 
 <p>Also, you may want to adjust the replication factor you defined for your keyspace(s).  For a 3-node cluster, you will want a replication factor of at least 2.  This will ensure that if one server goes down, you will still have one copy of the data out there.  And that should still allow your application to resolve (as long as your read/write consistency is set to ONE).</p>
-"
+",['initial_token']
 20646598,24172932,2013-12-17 23:12:37,Token Aware Astyanax Connection pool connecting on nodes without distributing connections over nodes,"<p>I was using astyanax connection pool defined as this:</p>
 
 <pre><code>ipSeeds = ""LOAD_BALANCER_HOST:9160"";
@@ -1648,7 +1648,7 @@ Why is this happening? Shouldn't a token aware connection pool query the ring fo
 <p>The latter, of course, needs the definition of data centers in your keyspace.</p>
 
 <p>Without any further information I would suggest to just change the partitioner as a TokenAware load balancing policy is usually a good idea. The main load will end up on these nodes in the end -- the TokenAware policy get's you to the right coordinator just quicker.</p>
-"
+",['partitioner']
 21384856,21390188,2014-01-27 15:32:21,Cassandra Partial Replication,"<p>This is my configuration for 4 Data Centers of Cassandra: </p>
 
 <pre><code>create KEYSPACE mySpace WITH replication = {'class': 'NetworkTopologyStrategy', 'DC1' : 1, 'DC2' : 1, 'DC3' : 1, 'DC4' : 1};
@@ -1690,7 +1690,7 @@ nd3-rc_4 rack-c
 </pre>
 
 <p>In this case, if you set your replication option to DC1:3, each of the racks a,b,and c will have 100% of your data (each node in each rack 25%).</p>
-"
+",['rack']
 22006887,22007669,2014-02-25 06:59:28,cassandra - Saved cluster name Test Cluster != configured name,"<p>How am I supposed to bot a new Cassandra node when I get this error?</p>
 
 <pre><code>INFO [SSTableBatchOpen:1] 2014-02-25 01:51:17,132 SSTableReader.java (line 223) Opening /var/lib/cassandra/data/system/local/system-local-jb-5 (5725 bytes)
@@ -1716,7 +1716,7 @@ bash $ ./nodetool flush
 </code></pre>
 
 <p>Finally you need to rename the cluster to the new name in cassandra.yaml (again <strong>on each node</strong>)</p>
-"
+",['cluster_name']
 22294555,22302497,2014-03-10 07:40:33,Cassandra rack concept and database structure,"<p>I am new to Cassandra and I would like to learn more about Cassandra's racks and structure.</p>
 
 <p>Suppose I have around 70 column families in Cassandra and two AWS2 instances.</p>
@@ -1751,7 +1751,7 @@ bash $ ./nodetool flush
 <p><a href=""http://www.datastax.com/documentation/cassandra/2.0/cassandra/architecture/architectureDataDistributeReplication_c.html"" rel=""noreferrer"">Apache Cassandra 2.0: Data Replication</a></p>
 
 <p><a href=""http://www.datastax.com/documentation/cassandra/2.0/cassandra/architecture/architectureSnitchesAbout_c.html"" rel=""noreferrer"">Apache Cassandra 2.0: Snitches</a></p>
-"
+",['rack']
 22871775,22873075,2014-04-04 19:44:46,How to check vnode disabled on a hadoop node,"<p>Linking back to this question:
 <a href=""https://stackoverflow.com/questions/19969329/why-not-enable-virtual-node-in-an-hadoop-node/19974621#19974621"">Why not enable virtual node in an Hadoop node?</a></p>
 
@@ -1779,7 +1779,7 @@ So my specific questions are:</p>
 # that do not have vnodes enabled.
 initial_token:  &lt;&lt; Your generated token goes here
 </code></pre>
-"
+","['num_tokens', 'initial_token']"
 23145435,23358506,2014-04-18 00:03:32,Cassandra multiple disk per node setup,"<p><strong>Intro</strong></p>
 
 <p>I have a cassandra 1.2 cluster, all the nodes have SSDs. Now I want to add more disks to the existing nodes, but I want to be able to choose which tables are stored on different disks.</p>
@@ -1802,7 +1802,7 @@ initial_token:  &lt;&lt; Your generated token goes here
 ",<cassandra><storage><database><nosql>,"<p>You can set multiples files using the data_file_directories property, but the data is distributed over the folders internally by Cassandra. You can not take decisions on which keyspace or column family goes to each directory.</p>
 
 <p>So the symbolic links is the way to go in my opinion.</p>
-"
+",['data_file_directories']
 23294298,23296128,2014-04-25 13:16:39,Replication in cassandra,"<p>How does replication work in Cassandra? If I have 3 racks and 3 RF with <code>NetworkTopologyStratagy</code> then will the data be replicated to all the 3 racks? </p>
 
 <p>How exactly will data be replicated across the cluster? I ask because we are designing our cluster to cater for the worst case scenario that 2 of 3 racks go down, and we don't want to lose data.</p>
@@ -1862,7 +1862,7 @@ WITH REPLICATION = {'class' : 'NetworkTopologyStrategy', 'DC1' : 3}
 </code></pre>
 
 <p>If you did that, and had your three racks defined underneath that DC, this will replicate one copy to all three racks.</p>
-"
+",['rack']
 23685240,23704345,2014-05-15 17:45:01,Hadoop timing out trying to write to Cassandra in AWS multi-region configuration,"<p>I am running a multi-DC Cassandra (open-source, not DSE) cluster in AWS, where one DC (us-west-2) is set up for analytics and the other (us-east) is the transactional store.  I'm using NetworkTopologyStrategy with the EC2 snitch, and a consistency level of LOCAL_ONE in my Hadoop config.  Hadoop <strong>can read from Cassandra without issue</strong>, but <strong>attempting to write produces a timeout exception</strong>.</p>
 
 <p>Running <code>nodetool status</code> shows the DCs are properly configured:</p>
@@ -1969,7 +1969,7 @@ Caused by: java.net.ConnectException: Connection timed out
 <p>I filed a ticket and submitted a patch to address these issues:</p>
 
 <p><a href=""https://issues.apache.org/jira/browse/CASSANDRA-7252"" rel=""nofollow"">https://issues.apache.org/jira/browse/CASSANDRA-7252</a></p>
-"
+","['listen_address', 'broadcast_address', 'rpc_address']"
 23798563,24134844,2014-05-22 05:35:53,Unable to connect to remote cassandra from titan,"<p>I am using cassandra 2.0.7 sitting on a remote server listening on non-default port </p>
 
 <pre><code>&lt;code&gt;
@@ -2033,7 +2033,7 @@ Caused by: com.netflix.astyanax.connectionpool.exceptions.NoAvailableHostsExcept
 
 <p>thanks</p>
 ",<java><cassandra><titan>,"<p>Changing the listen_address to 172.182.183.215 in the configuration had done the trick. Initially it was not clear if just setting the rpc_address was enough.</p>
-"
+","['listen_address', 'rpc_address']"
 24012641,24046196,2014-06-03 10:20:18,Cassandra CLUSTERING ORDER BY not doing what I'd expect,"<p>I'm pretty new to Cassandra, I have created a table like so:</p>
 
 <pre><code>CREATE TABLE IF NOT EXISTS notifications (
@@ -2099,7 +2099,7 @@ BTW, I have also tried to set <code>raised</code> to a timestamp column and expe
 <p>The order you are seeing is the order of IDs. As you observed, these are essentially random. This order is the partitioner order i.e. ordered by the hash of the ID.</p>
 
 <p>You can't change this order, so you can't read all your partitions back in time order. You can only order within each partition. </p>
-"
+",['partitioner']
 24219953,24223191,2014-06-14 12:33:58,cassandra - only superuser is allowed to perform CREATE USER queries,"<p>I'm logging in with on Ubuntu 14.10 on Cassandra 2.0.8 with Java 1.7.0_60-b19</p>
 
 <pre><code>cqlsh -u cassandra -p cassandra
@@ -2135,7 +2135,7 @@ To enable PasswordAuthenticator you need to change authenticator property in cas
 
 <pre><code>cqlsh -u cassandra -p cassandra
 </code></pre>
-"
+",['authenticator']
 24684457,24774099,2014-07-10 19:09:24,data auditing in Cassandra,"<p>How to implement auditing for cassandra data?
 I am looking for a open source option.</p>
 
@@ -2197,7 +2197,7 @@ CREATE TABLE users (
 <p>You can have a custom authorizer extending the AllowAllAuthorizer(this will disable permission caching). Whenever you get an authorize request on the Authorizer you can log it. The downside of this approach is that you do not know what the user intends to do with the table, only that he is request some authorization on it. Permission is the one which contains what he wants to do with the table, but it is not passed on to the authorizer.</p>
 
 <p>If you decide on either of these approaches, you are free to post followups if you need more detail.</p>
-"
+",['authorizer']
 25098083,25112097,2014-08-02 18:21:02,nodetool repair across replicas of data center,"<p>Just want to understand the performance of 'nodetool repair' in a multi data center setup with Cassandra 2.</p>
 
 <p>We are planning to have keyspaces with 2-4 replicas in each data center. We may have several tens of data centers. Writes are done with LOCAL_QUORUM/EACH_QUORUM consistency depending on the situation and reads are usually done with LOCAL_QUORUM consistency. Questions:</p>
@@ -2226,7 +2226,7 @@ From nodetool repair perspective IMO, this does not make any difference if you t
 </ol>
 
 <p>Also, the goal of repair using nodetool is so that deletes do not come back. The hard requirement for routine repair frequency is the value of gc_grace_seconds. In systems that seldom delete or overwrite data, you can raise the value of gc_grace with minimal impact to disk space. This allows wider intervals for scheduling repair operations with the nodetool utility. One of the recommended ways to avoid frequent repairs is to have immutability of records by design. This may be important to you since you need to run on a tens of data centers and ops will otherwise already be painful.</p>
-"
+",['dc']
 25306785,25309968,2014-08-14 11:19:06,"How to reset Cassandra superuser, when Cassandra does not know 'cassandra' default user?","<p>How to reset default Cassandra credentials without changing source code?</p>
 
 <p>I have check similar problems like <a href=""https://stackoverflow.com/questions/18398987/how-to-reset-a-lost-cassandra-admin-users-password"">How to reset a lost Cassandra admin user&#39;s password?</a>.
@@ -2286,14 +2286,14 @@ cqlsh&gt;
 <li>Instead of renaming (<code>mv</code>) the <code>system_auth</code> directory, you could also just delete it (<code>rm</code>).</li>
 <li>You will have to re-apply the appropriate replication settings to your <code>system_auth</code> keyspace.  By default, <code>system_auth</code> only has a replication factor of 1.</li>
 </ul>
-"
+",['authenticator']
 25346597,25353520,2014-08-17 05:42:01,Which Cassandra partitioner is better: Random or Murmur3 (in terms of throughput) and what is the difference between them?,"<p>What difference the choice of partitioners could bring in my Cassandra throughput and latency? I have gone through all three partitioners and one thing I noticed is that <code>ByteOrdered</code> partitioner has overhead so I do not use it. Now I am a bit split between <code>Random</code> and <code>Murmur3</code> partitioners.</p>
 ",<cassandra>,"<p>The main difference between the two, is in how each generates the token hash values.  The Random partitioner used the JDK native MD5 hash (because it was both convenient for the developers and standard across all JDKs).  But since Cassandra really doesn't need a cryptographic hash, that function took much longer than it needed to.</p>
 
 <p>With the Murmur3 partitioner, the token hashing does only what Cassandra needs it to do.  Which, is to generate a token ensuring even distribution across the nodes.  This results in an improvement of 3 to 5 times in token hashing performance, which untimately translates into the overall 10% gain that Carlo mentioned above.</p>
 
 <p>It should also be noted that DataStax warns that the partitioners are not compatible.  Which means, that once you start with one partitioner, you cannot (easily) convert to the other.  Therefore, I would pick the newer, slightly faster Murmur3 partitioner.</p>
-"
+",['partitioner']
 26708594,26717954,2014-11-03 05:56:43,Problems In Cassandra ByteOrderedPartitioner in Cluster Environment,"<p>I am using cassandra 1.2.15 with ByteOrderedPartitioner in a cluster environment of 4 nodes with 2 replicas. I want to know what are the drawbacks of using the above partitioner in cluster environment? After a long search I found one drawback. I need to know what are the consequences of such drawback?</p>
 
 <pre><code>1) Data will not distribute evenly. 
@@ -2345,7 +2345,7 @@ PRIMARY KEY ((stationid),readingdatetime));
 <p>With this structure, you could query all of the readings for a particular weather station, and order them by <code>readingdatetime</code>.  However, if you queried all of the data (ex: <code>SELECT * FROM stationreads;</code>) the results probably will not be in any discernible order.  That's because the total result set will be ordered by the (random) hashed values of the partition key (stationid in this case).  So while ""yes"" you can order your results in Cassandra, you can only do so within the context of a particular partition key. </p>
 
 <p>Also, there have been many improvements in Cassandra since 1.2.15.  You should definitely consider using a more recent (2.x) version.</p>
-"
+",['partitioner']
 27088251,27090428,2014-11-23 11:05:35,"After setting authenticator: PasswordAuthenticator in Cassandra.yaml, Cassandra CQL Shell does not run","<p>I'm new in Cassandra. I'm using Datastax Community edition and using only a single node in Windows 7. Trying to change my authentication, set authenticator value from <code>AllowAllAuthenticator</code> to <code>PasswordAuthenticator</code> in Cassandra.yaml. After that setting, it does not let me to run my Cassandra CQL Shell.</p>
 
 <p>Q1. Why this is happening?</p>
@@ -2373,7 +2373,7 @@ PRIMARY KEY ((stationid),readingdatetime));
 </code></pre>
 
 <p>Basically, put the <code>-u</code> and <code>-p</code> flags <em>outside</em> of the double quotes, and it should work.</p>
-"
+",['authenticator']
 27939234,27944273,2015-01-14 09:11:15,Cassandra ByteOrderedPartitioner,"<p>I want to execute some range queries on a table that is structured like:</p>
 
 <pre><code>CREATE TABLE table(
@@ -2428,7 +2428,7 @@ PRIMARY KEY((someotherkey),num)
 <pre><code>SELECT num, val1, val2 
 FROM tableorderedbynum WHERE someotherkey='yourvalue' AND num&gt;100 AND num&lt;1000;
 </code></pre>
-"
+",['partitioner']
 29087090,29087407,2015-03-16 21:17:41,Connecting to Cassandra with Spark,"<p>First, I have bought the new O'Reilly Spark book and tried those Cassandra setup instructions. I've also found other stackoverflow posts and various posts and guides over the web. None of them work as-is. Below is as far as I could get.</p>
 
 <p>This is a test with only a handful of records of dummy test data. I am running the most recent Cassandra 2.0.7 Virtual Box VM provided by plasetcassandra.org linked from the main Cassandra project page.</p>
@@ -2466,7 +2466,7 @@ java.io.IOException: Failed to fetch splits of TokenRange(0,0,Set(CassandraNode(
 ",<cassandra><apache-spark><cassandra-2.0>,"<p>Check the rpc_address config in your cassandra.yaml file on your cassandra node.  It's likely that the spark connector is using that value from the system.local/system.peers tables and it may be set to 127.0.0.1 in your cassandra.yaml.</p>
 
 <p>The spark connector uses thrift to get token range splits from cassandra.  Eventually I'm betting this will be replaced as C* 2.1.4 has a new table called system.size_estimates (<a href=""https://issues.apache.org/jira/browse/CASSANDRA-7688"" rel=""nofollow"">CASSANDRA-7688</a>).  It looks like it's getting the host metadata to find the nearest host and then making the query using thrift on port 9160.</p>
-"
+",['rpc_address']
 29133678,29134982,2015-03-18 22:11:50,"add cassandra node fails with ConfigurationException: For input string: ""None""","<p>I have a dse cluster with 4 nodes already. I am adding the fifth node using opscenter. </p>
 
 <p>I installed datastax-agent on this last node which seems to run properly, then using the opscenter, I proceeded to add the node. It first reports that it is loading new software onto the node, then errors out.</p>
@@ -2497,7 +2497,7 @@ org.apache.cassandra.exceptions.ConfigurationException: For input string: ""None
 </code></pre>
 
 <p>Check what that value is in your cassandra.yaml. I suspect you should see ""None"" in place for the token value.</p>
-"
+",['partitioner']
 29502979,29546956,2015-04-07 23:08:53,Backups folder in Opscenter keyspace growing really huge,"<p>We have a 10 node Cassandra cluster. We configured a repair in Opscenter. We find there is a backups folder created for every table in Opscenter keyspace. It keeps growing huge. Is there a solution to this, or do we manually delete the data in each backups folder?</p>
 ",<cassandra><cql><datastax><datastax-enterprise><opscenter>,"<p>First off, Backups are different from snapshots - you can take a look at the backup <a href=""http://www.datastax.com/2015/03/datastax-opscenter-5-1-real-world-test-simulation-of-visual-backup-and-restore-services"" rel=""nofollow noreferrer"">documentation</a> for OpsCenter to learn more.</p>
 <h2>Incremental backups:</h2>
@@ -2523,12 +2523,12 @@ created.</p>
 <h3>Clear your snapshots</h3>
 <p>If you have too many snapshots and need to free up space (maybe once you have backed them up to S3 or glacier or something) go ahead and use nodetool clearsnapshots to delete them. This will free up space. You can also go in and remove them manually from your file system but nodetool clearsnapshots removes the risk of rm -rf ing the wrong thing.</p>
 <p><strong>Note:</strong> You may also be running repairs too fast if you don't have a ton of data (check my response to this <a href=""https://stackoverflow.com/questions/28021344/high-load-on-cassandra-nodes"">other SO question</a> for an explanation and the repair service config levers).</p>
-"
+",['incremental_backups']
 29583586,29583904,2015-04-11 22:02:38,Is it possible to shut down cassandra cluster and restart it back without loosing data?,"<p>Im running 2 node cassandra cluster on virtual box (one as a seed). I need to shut down the cluster and turn it on again. But when i tried to restart, it is throwing an error ""cannot change the number of tokens from 1 to 256"", even though i dint change any configuration. But i am able to restart it after deleting the data. Is there any way to restart the cluster without removing the data ?</p>
 ",<cassandra><cluster-computing><datastax>,"<p>You must have changed your cassandra.yaml to include num_tokens to 256 on a cluster that was using single tokens.</p>
 
 <p>Comment out num_tokens and try again.</p>
-"
+",['num_tokens']
 29589311,29592830,2015-04-12 12:11:15,Prevent UnAuhtorize Node to Join Cassandra Cluster,"<p>I'm using Apache Cassandra 2.1.2 and create 5 nodes cluster.
 in <code>cassandra.yaml</code> config file, authorizer &amp; authenticator properties are set to <code>CassandraAuthorizer</code> and <code>PasswordAuthenticator</code>.</p>
 
@@ -2542,7 +2542,7 @@ in <code>cassandra.yaml</code> config file, authorizer &amp; authenticator prope
 <p>This way you can't have unauthorized nodes joining your ring that you don't know about.   Also, chances are if your config files are changed, the server_encryption_options will be invalidated as well and your node won't be able to connect.</p>
 
 <p>If you are concerned about securing your cluster.  I'd also recommend using <a href=""http://docs.datastax.com/en/cassandra/2.0/cassandra/security/secureSSLClientToNode_t.html"" rel=""nofollow"">client-to-node encryption</a> when using authorization as without SSL the credentials are passed in the clear when a client connects.</p>
-"
+",['server_encryption_options']
 29635372,29636188,2015-04-14 18:59:56,How does Cassandra partitioning work when replication factor == cluster size?,"<h2>Background:</h2>
 
 <p>I'm new to Cassandra and still trying to wrap my mind around the internal workings.</p>
@@ -2593,7 +2593,7 @@ deployment strategy aside from the obvious case of a cluster of one?</p>
 write the data to the node contacted by the client?</p>
 </blockquote>
 <p>This depends on your load balancing policies at the driver. Often we select token aware policies (assuming you're using one of the Datastax drivers), in which case requests are routed to the primary replica automatically. You could use round robin in your case and have the same effect.</p>
-"
+",['partitioner']
 29976998,29993081,2015-04-30 20:14:48,How to Connect to Cassandra Remotely Using DevCenter,"<p>I setup the DataStax Cassandra Sandbox on Azure using their image. I was able to run OpsCenter locally on the server without any issues. The install is Ubuntu which I am very new to. </p>
 
 <p>Per this post <a href=""https://stackoverflow.com/questions/12236898/apache-cassandra-remote-access"">Apache Cassandra remote access</a>, <strong>I should be able to set my rpc_address to 0.0.0.0 to allow remote access to my database</strong>. However it says unable to connect when attempting a connection from DevCenter on my local Windows 8 PC.</p>
@@ -2635,7 +2635,7 @@ rather than the cloud service.</li>
 <p>If you used endpoints instead of setting up a public static ip <strong>(which you will want to do for security reasons and enable user access control via ip filters)</strong>, then you will want to use those newly created port numbers instead along with your virtual ip address.</p>
 
 <p>Secondly... you will need to set rpc_address to 0.0.0.0 in the cassandra.yaml file.</p>
-"
+",['rpc_address']
 30073253,30079778,2015-05-06 09:52:34,Cassandra datastax driver ResultSet sharing in multiple threads for fast reading,"<p>I've huge tables in cassandra, more than 2 billions rows and increasing. The rows have a date field and it is following date bucket pattern so as to limit each row.</p>
 
 <p>Even then, I've more than a million entries for a particular date. </p>
@@ -2682,7 +2682,7 @@ private List&lt;Row&gt; rangeQuery(PreparedStatement rangeStmt, TokenRange range
 <p>You could basically generate your statements and submit them in async fashion, the example above just iterates through the statements one at a time.</p>
 
 <p>Another option is to use the <a href=""https://github.com/datastax/spark-cassandra-connector"">spark-cassandra-connector</a>, which essentially does this under the covers and in a very efficient way.  I find it very easy to use and you don't even need to set up a spark cluster to use it.  See <a href=""https://github.com/datastax/spark-cassandra-connector/blob/master/doc/7_java_api.md"">this document</a> for how to use the Java API.</p>
-"
+",['partitioner']
 30205795,30209147,2015-05-13 04:37:56,"I am getting an InvalidTypeException whenever I am using the row.getToken(""fieldname"")?","<p>for the following piece of code I am getting an InvalidTypeException whenever I am using the <code>row.getToken(""fieldname"")</code>.</p>
 
 <pre><code>Record RowToRecord(Row rw) {
@@ -2720,7 +2720,7 @@ private List&lt;Row&gt; rangeQuery(PreparedStatement rangeStmt, TokenRange range
 </ul>
 
 <p>In theory you can call <code>getToken</code> on any column with this type (although in practice it probably only makes sense for columns that are the result of a <code>token()</code> call, as explained above).</p>
-"
+",['partitioner']
 30449194,30453712,2015-05-26 03:55:45,Failover not working with Cassandra when using DataStax C# Driver,"<p>I have a two node setup in Azure and I am trying to get failover working when connecting with the C# driver. My nodes seem to be communicating fine when working with cqlsh and within OpsCenter.</p>
 
 <pre><code>var contact = ""publicipforfirstnode"";
@@ -2758,7 +2758,7 @@ Trace.Listeners.Add(new ConsoleTraceListener());
 <li>listen_address: The IP address or hostname that Cassandra binds to for connecting to other Cassandra nodes.</li>
 <li>broadcast_rpc_address: RPC address to <strong>broadcast</strong> to drivers and other Cassandra nodes. This cannot be set to 0.0.0.0. If blank, it is set to the value of the rpc_address or rpc_interface. If rpc_address or rpc_interfaceis set to 0.0.0.0, this property must be set.</li>
 </ul>
-"
+",['rpc_address']
 30627835,30628055,2015-06-03 18:24:45,What is the difference between broadcast_address and broadcast_rpc_address in cassandra.yaml?,"<p><strong>GOAL:</strong> I am trying to understand the best way to configure my Cassandra cluster so that several different drivers across several different networking scenarios can communicate with it properly. </p>
 
 <p><strong>PROBLEM/QUESTION:</strong> It is not entirely clear to me, after reading the documentation what the difference is between these two settings: broadcast_address and broadcast_rpc_address as it pertains to the way that a driver connects and interacts with the cluster. Which one or which combination of these settings should I use with my node's accessible network endpoint (DNS record attainable by the client's/drivers)?</p>
@@ -2776,7 +2776,7 @@ If your Cassandra cluster is deployed across multiple Amazon EC2 regions and you
 <p>The rpc family of settings pertain to drivers that use the Thrift protocol to communicate with cassandra. For those drivers that use the native transport, the broadcast_address will be reported and used.</p>
 
 <p>My test case confirms this.</p>
-"
+",['broadcast_address']
 30779774,30781880,2015-06-11 11:41:04,How to delete a record in Cassandra?,"<p>I have a table like this:</p>
 
 <pre><code>CREATE TABLE mytable (
@@ -2838,7 +2838,7 @@ If your Cassandra cluster is deployed across multiple Amazon EC2 regions and you
 
 <pre><code>INSERT INTO table (key, time, data) VALUES (1,dateof(now()),'blah blah');
 </code></pre>
-"
+",['precision']
 30782581,35349566,2015-06-11 13:44:00,Reading rows using AllRowsReader but starting from a specific row,"<p>I have a batch job that reads through approximately 33 million rows in Cassandra, using the <code>AllRowsReader</code> as described <a href=""https://github.com/Netflix/astyanax/wiki/AllRowsReader-All-rows-query"" rel=""nofollow"">in the Astyanax wiki</a>:</p>
 
 <pre><code>new AllRowsReader.Builder&lt;&gt;(getKeyspace(), columnFamily)
@@ -2877,7 +2877,7 @@ There are mainly two type of partitioners:
 <p>I am assuming you should be using unordered partitioner in your code. So currently there is no way to tell cassandra which is using unordered partitioner that start from this particular row.</p>
 
 <p>I hope this answers your question</p>
-"
+",['partitioner']
 31300682,31301133,2015-07-08 18:23:23,CQLSH: Converting unix timestamp to datetime,"<p>I am performing a cql query on a column that stores the values as unix timestmap, but want the results to output as datetime. Is there a way to do this?</p>
 
 <p>i.e. something like the following:</p>
@@ -2903,7 +2903,7 @@ aploetz@cqlsh:stackoverflow2&gt; SELECT datetime,unixtime,dateof(maxtimeuuid(uni
 </code></pre>
 
 <p>Note that timeuuid stores greater precision than either a UNIX timestamp or a datetime, so you'll need to first convert it to a TimeUUID using either the <code>min</code> or <code>maxtimeuuid</code> function.  Then you'll be able to use <code>dateof</code> to convert it to a datetime timestamp.</p>
-"
+",['precision']
 31612199,31701968,2015-07-24 13:45:22,"Cassandra - Write doesn't fail, but values aren't inserted","<p>I have a cluster of 3 Cassandra 2.0 nodes. My application I wrote a test which tries to write and read some data into/from Cassandra. In general this works fine.</p>
 
 <p>The curiosity is that after I restarted my computer, this test will fail, because after writting I read the same value I´ve write before and there I get null instead of the value, but the was no exception while writing. 
@@ -2961,7 +2961,7 @@ For inserts I tried </p>
 <p>Do you have a requirement to use sub-millisecond precision for the insert timestamps? If possible I would recommend using System.currentTimeMillis() instead of nanoTime().</p>
 <p><a href=""http://docs.oracle.com/javase/7/docs/api/java/lang/System.html#currentTimeMillis()"" rel=""nofollow noreferrer"">http://docs.oracle.com/javase/7/docs/api/java/lang/System.html#currentTimeMillis()</a></p>
 <p>If you have a requirement to use sub-millisecond precision it would be possible to use System.currentTimeMillis() with some kind of atomic counter that ranged between 0-999 and then use that as a timestamp. This would however break if multiple clients insert the same row at the same time.</p>
-"
+",['precision']
 31723110,31723919,2015-07-30 11:54:26,keyspace and tables not replicating across data centre in cassandra,"<p>I am trying to create cassandra cluster. For that I have a single node data centres
 One data center is named DC1 and the other is DC2. Hence there are 2 single node data center. I followed the steps given here
 <a href=""http://docs.datastax.com/en/cassandra/2.0/cassandra/initialize/initializeMultipleDS.html"" rel=""nofollow"">http://docs.datastax.com/en/cassandra/2.0/cassandra/initialize/initializeMultipleDS.html</a></p>
@@ -3004,7 +3004,7 @@ UN  100.117.150.55  162.94 KB  256     ?       9f3e49f6-debc-4a9c-ba93-bc65b3851
 <p>Make sure in cassandra.yaml that both nodes have the same cluster_name and that both have the same list of ip's for ""- seeds:"".  Since you only have two nodes, I'd list both ip's as the seeds rather than just one.</p>
 
 <p>If the nodes have joined the same cluster, then it should show both of them when you run nodetool status.</p>
-"
+",['cluster_name']
 31733395,31734440,2015-07-30 20:26:00,How to prevent Cassandra commit logs filling up disk space,"<p>I'm running a two node Datastax AMI cluster on AWS. Yesterday, Cassandra started refusing connections from everything. The system logs showed nothing. After a <em>lot</em> of tinkering, I discovered that the commit logs had filled up all the disk space on the allotted mount and this seemed to be causing the connection refusal (deleted some of the commit logs, restarted and was able to connect).</p>
 
 <p>I'm on DataStax AMI 2.5.1 and Cassandra 2.1.7</p>
@@ -3044,7 +3044,7 @@ UN  100.117.150.55  162.94 KB  256     ?       9f3e49f6-debc-4a9c-ba93-bc65b3851
 <p>...which (I feel) led to many folks setting this value <em>WAY</em> too high.</p>
 
 <p>Assuming a value of 8, the <code>memtable_cleanup_threshold</code> is <code>.111</code>.  When the footprint of all memtables exceeds this ratio of total memory available, flushing occurs.  Too many flush (blocking) writers can prevent this from happening expediently.  With a single <code>/data</code> dir, I recommend setting this value to <strong>2</strong>.</p>
-"
+",['memtable_flush_writers']
 31785110,31793736,2015-08-03 10:32:09,How to understand bloom_filter_fp_chance and read_repair_chance in Cassandra,"<p><strong>Bloom Filters</strong> </p>
 
 <pre><code>When data is requested, the Bloom filter checks if the row exists before doing disk I/O. 
@@ -3074,7 +3074,7 @@ The recommended setting is 0.1. A higher value yields diminishing returns.
 <p>read_repair_chance controls the probability that a read of a key will be checked against the other replicas for that key.  This is useful if your system has frequent downtime of the nodes resulting in data getting out of sync.  If you do a lot of reads, then the read repair will slowly bring the data back into sync as you do reads without having to run a full repair on the nodes.  Higher settings will cause more background read repairs and consume more resources, but would sync the data more quickly as you do reads.</p>
 
 <p>See documentation on these settings <a href=""http://docs.datastax.com/en/cql/3.1/cql/cql_reference/tabProp.html"">here</a>.</p>
-"
+",['precision']
 31790072,31791790,2015-08-03 14:34:36,Failover and Replication in 2-node Cassandra cluster,"<p>I run KairosDB on a 2-node Cassandra cluster, RF = 2, Write CL = 1, Read CL = 1. If 2 nodes are alive, client sends half of data to node 1 (e.g. metric from METRIC_1 to METRIC_5000) and the other half of data to node 2 (e.g. metric from METRIC_5001 to METRIC_10000). Ideally, each node always has a copy of all data. But if one node is dead, client sends all data to the alive node.</p>
 
 <p>Client started sending data to the cluster. After 30 minutes, I turned node 2 off for 10 minutes. During this 10-minute period, client sent all data to node 1 properly. After that, I restarted node 2 and client continued sending data to 2 nodes properly. One hour later I stopped the client.</p>
@@ -3114,7 +3114,7 @@ The recommended setting is 0.1. A higher value yields diminishing returns.
 KairosDB is able to communicate with several nodes and would round robin between those as coordinator nodes.</p>
 
 <p>I hope this helps.</p>
-"
+",['hinted_handoff_enabled']
 31815665,31817416,2015-08-04 17:29:48,Cassandra 2.1.8 remote access,"<p>I'm configuring Cassandra to accept remote accesses (cqlsh ).
 Here's the following that I changed in the cassandra.yaml:</p>
 
@@ -3136,7 +3136,7 @@ Here's the following that I changed in the cassandra.yaml:</p>
 
 <p>Thanks</p>
 ",<cassandra>,"<p>Check your listen_address in cassandra.yaml. It defaults to localhost, which will not allow for external access. Change it to the private IP, and you will be able to talk to it from the outside. The rpc_address is for Thrift requests.</p>
-"
+","['listen_address', 'rpc_address']"
 32012777,32013024,2015-08-14 14:43:25,ERROR Session: Error creating pool to /127.0.0.1:9042,"<p>I am trying to insert values in cassandra when I come across this error:</p>
 
 <pre><code>15/08/14 10:21:54 INFO Cluster: New Cassandra host /a.b.c.d:9042 added
@@ -3188,7 +3188,7 @@ default=DC1:r1
 ",<configuration><cassandra>,"<p>I think the problem is your rpc_broadcast_address is set to 127.0.0.1.  Is there a reason in particular you are doing this?</p>
 
 <p>The java driver uses the system.peers table to look up the ip address to use to connect to hosts.  If rpc_broadcast_address is set this is what will be present in system.peers and the driver will try to use it.  If rpc_broadcast_address is not set, rpc_address will be used.  In either case, you'll want to set one of these addresses to an address that will be accessible by your client.  If you set rpc_address, you will want to remove broadcast_rpc_address.</p>
-"
+",['rpc_address']
 32062552,32081643,2015-08-18 02:20:55,Querying in KairosDB/OpenTSDB,"<p>I have 3 million records with entries like:</p>
 
 <pre><code>~/Abharthan/kairosdb$ head -10 export.txt
@@ -3256,7 +3256,7 @@ Query monthly sum for one building for one year (output expected of 12 points)
 
 <pre><code>{ ""start_absolute"":1359695700000, ""end_absolute"":1422853200000, ""metrics"":[{""tags"":{""Building_id"":[""100""]},""name"":""meterreadings"",""aggregators"":[{""name"":""sum"",""align_sampling"":true,""sampling"":{""value"":""1"",""unit"":""months""}}]}]}
 </code></pre>
-"
+",['precision']
 32307615,32307980,2015-08-31 09:07:23,Can I use num_tokens as load factor in Cassandra?,"<p>If you run cassandra on machines with different sizes of hard disk (e.g. one with one TB, another with 2TB), can I use num_tokens as load factor?
 I want to reduce the risk of one node running out of disk space and balance the usage of disk on different machines. </p>
 
@@ -3267,7 +3267,7 @@ Can I change the number of nodes later if disk space changes without trouble?</p
 
 <p>EDIT: numnodes replaced by num_tokens</p>
 ",<cassandra><cassandra-2.0>,"<p>Are you referring to <a href=""http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html?scroll=reference_ds_qfg_n1r_1k__num_tokens"" rel=""nofollow"">num_tokens</a> settings? Yes, you can use a different number of tokens based on the hardware resources. Nodes with a larger number of tokens will see higher load and disk usage. Once set, the num_tokens setting cannot be changed at a later point without decommissioning the node.</p>
-"
+",['num_tokens']
 32729181,32732661,2015-09-23 00:30:27,Installing Cassandra on Vagrant Centos using Puppet missing dsc22,"<p>I'm new to puppet. I know that cassandra is missing from yum so I figured a puppet recipe would download and install it, but it seems like <code>locp/cassandra</code> is just trying to install it from yum. The recipe is supposed to work, but I don't see anything on <a href=""https://github.com/locp/cassandra"" rel=""nofollow"">https://github.com/locp/cassandra</a> as to why it's not working for me or any thing I need to set up before it should work.</p>
 
 <p>I used librarian-puppet to install the modules in puppet/modules.</p>
@@ -3329,7 +3329,7 @@ class { 'cassandra':
 include repo
 include cassandra
 </code></pre>
-"
+","['listen_address', 'cluster_name']"
 33460506,33639635,2015-11-01 08:42:34,Not able to run multi node cluster on AWS EC2,"<p>Trying to configure 3 nodes in Cassandra on AWS EC2 (have set ICMP, SSH, HTTP and HTTPS in security groups accordingly)</p>
 
 <p>Cluster name is also set as same in all the three cassandra.yaml file i.e. 'Test Cluster'</p>
@@ -3350,14 +3350,14 @@ Machine Ubuntu</p>
 
 <p>Is something I am missing?</p>
 ",<amazon-web-services><amazon-ec2><cassandra>,"<p>although you've posted very little, it might be your snitch. Use GossipingPropertyFileSnitch or Ec2Snitch. Also, you shouldn't make every node a seed. In a 3-node cluster you need only 1 or maybe 2 for redundancy. The seeds: list in cassandra.yaml should be the same on each node. You shouldn't set both the rpc_address and the broadcast_rpc_address. Pick one or the other.</p>
-"
+",['rpc_address']
 34455066,34460870,2015-12-24 15:45:57,How many systems a given rack can hold,"<p>I am getting trained on Apache casssandra, where terms like nodes and racks are quite predominantly used. I understand that a rack is to hold n number of systems or nodes. But was wondering whether there is any upper limit to it, like a rack can hold this many systems.</p>
 
 <p>It was just for the sake of understanding, if any one knows the answer or any points to make on this, please share.</p>
 ",<cassandra>,"<p>There is no limit to the number of systems in a rack - racks are used to balance replicas within a datacenter, but are not bounded (though certainly, you're limited to a reasonable number of nodes in a datacenter, typically around 1000).</p>
 
 <p>Rack awareness can be tricky, especially if you have fewer racks than your replication_factor, or if your racks are of uneven sizes. Adding a rack after the fact, in particular, can cause significant problems - many operators disable rack awareness to avoid edge cases.</p>
-"
+",['rack']
 34730779,34731094,2016-01-11 20:48:14,How to store microsecond level timestamps in cassandra?,"<p>I'm trying to store data in cassandra which contains microsecond level timestamps.
 Cassandra's docs say that the 'timestamp' data type can store milliseconds since epoch but several messages on the internet seem to imply that cassandra can natively store microsecond timestamps.</p>
 
@@ -3387,7 +3387,7 @@ Here is an example of microsecond confusion in Cassandra's own docs:</p>
 <p>EDIT2:
 I should mention that I intend to query this using spark. From what I understand, spark parses its own flavor of sql and translates it to cassandra (although I'm using CassandraContext in zeppelin). Anything which might help or hinder my search for microsecond level timestmaps?</p>
 ",<cassandra>,"<p>You can use bigint or a timeuuid. Type 1 uuid's have 100ns precision so it can cover you. Some utilities, libraries, convenience functions may not give you what you need though so be prepared to write some uuid functions.</p>
-"
+",['precision']
 34871464,34871831,2016-01-19 08:08:30,How to programmatically determine the number of nodes in a Cassandra Cluster?,"<p>Is there a way to determine the number of nodes in a Cassandra cluster without first having a context?</p>
 
 <p>I am trying to get that number to make sure that the user does not give me a replicating factor that is too large (i.e. says 10 with only 9 nodes.)</p>
@@ -3413,10 +3413,10 @@ I should mention that I intend to query this using spark. From what I understand
 </code></pre>
 
 <p>There is one <strong>partition</strong> (row key in Thrift terminology) per node</p>
-"
+","['rpc_address', 'rack']"
 34944323,34950340,2016-01-22 10:23:06,"Does NetworkTopologyStrategy behave exactly as SimpleStrategy for single rack, single datacenter?","<p>I'm trying to understand <a href=""https://github.com/apache/cassandra/blob/trunk/src/java/org/apache/cassandra/locator/NetworkTopologyStrategy.java"" rel=""nofollow""><code>NetworkTopologyStrategy</code></a>. Does it behave exactly as <code>SimpleStrategy</code> for a single rack and a single datacenter?</p>
 ",<cassandra><cassandra-2.0><datastax><datastax-enterprise>,"<p>Yes. SimpleStrategy finds the first replica using the primary key token, then places replicas on subsequent nodes in their order along the token ring. NetworkTopologyStrategy does the same thing, but also skips nodes while looking for unique racks within each datacenter. If it does not find enough, the replicas are placed on nodes in the order they were skipped. With a single rack this results in the same placement as SimpleStrategy.</p>
-"
+",['rack']
 35005734,35076202,2016-01-26 01:46:00,Constant timeouts in Cassandra after adding second node,"<p>I'm trying to migrate a moderately large swath of data (~41 million rows) from an SQL database to Cassandra.  I've previously done a trial-run using half the dataset, and everything worked exactly as expected.</p>
 
 <p>The problem is, now that I'm trying the complete migration Cassandra is throwing constant timeout errors.  For instance:</p>
@@ -3733,7 +3733,7 @@ cluster = Cluster.builder().addContactPoint(Configuration.getCassandraHost()).wi
 </ol>
 
 <p>Those are the plausible theories I can think of.  Though no real way of testing to confirm which (if any) is correct.</p>
-"
+",['auto_snapshot']
 35010995,35014015,2016-01-26 09:52:21,Cassandra nodes appearing in different datacenters,"<p>I am having trouble with three nodes in Cassandra, each of them in an individual computer, as I am trying to set up my first Cassandra structure. I have set up everything as in the Datastax documentation, and I have the same configuration in the different cassandra.yaml of each machine (changing the relative ips). The thing is that after configuring everything, each computer sees each other as DN, and each machine (localhost) appears as UN, with the difference that in the .101 computer I can see two different datacenters, while in the other computers only one datacenter appears. </p>
 
 <p>So in my 192.168.1.101 machine when I type </p>
@@ -3825,7 +3825,7 @@ Status=Up/Down
 UN  192.168.1.101  309.13 KB  256          51.6%             6d28d540-2b44-4522-8612-b5f70a3d7d52  rack1
 UN  192.168.1.102  257.15 KB  256          48.4%             fc5c2dbe-8834-4040-9e77-c3d8199b6767  rack1
 </code></pre>
-"
+","['listen_address', 'rpc_address']"
 36133127,36139750,2016-03-21 14:03:17,How to configure cassandra for remote connection,"<p>I am trying to configure Cassandra Datastax Community Edition for remote connection on windows, </p>
 
 <p>Cassandra Server is installed on a Windows 7 PC, <strong>With the local CQLSH it connects perfectly to the local server.</strong></p>
@@ -3861,7 +3861,7 @@ UN  192.168.1.102  257.15 KB  256          48.4%             fc5c2dbe-8834-4040-
 <p><strong>3) Run the command to connect with the IP (only specify the port if you are not using the default):</strong></p>
 
 <p>$ cqlsh xxx.xxx.xx.xx</p>
-"
+",['rpc_address']
 36217451,36241271,2016-03-25 09:38:39,What is the main difference between partition and column family in Cassandra,"<p>I can't figure out if in the implementation of Apache Cassandra the notion of partition and family column is the same!? It seems that Cassandra is no longer of column family databases but more likely a tabular partitioned database. Can some please explain. I'm following this <a href=""https://pdfs.semanticscholar.org/22c6/740341ef13d3c5ee52044a4fbaad911f7322.pdf"" rel=""nofollow"">paper work</a></p>
 ",<cassandra><cql><nosql>,"<p>No.</p>
 
@@ -3874,7 +3874,7 @@ UN  192.168.1.102  257.15 KB  256          48.4%             fc5c2dbe-8834-4040-
 <p>For additional information, you may want to search for the word ""partition"" on this page:</p>
 
 <p><a href=""http://wiki.apache.org/cassandra/Operations"" rel=""nofollow"">http://wiki.apache.org/cassandra/Operations</a></p>
-"
+",['partitioner']
 36242493,36246069,2016-03-27 00:27:22,Are sorted columns in Cassandra using just one set of nodes? (one set = repeat factor),"<p>Using older versions of Cassandra, we were expected to create our own sorted rows using a <em>special</em> row of columns, because columns are saved sorted in Cassandra.</p>
 
 <p>Is Cassandra 3.0 with CQL using the same concept when you create a <code>PRIMARY KEY</code>?</p>
@@ -3908,7 +3908,7 @@ INSERT INTO my_table (created_on, ...) VALUES (9, ...);
 That said, you could employ the <a href=""https://docs.datastax.com/en/cassandra/2.1/cassandra/architecture/architecturePartitionerBOP_c.html"" rel=""nofollow"">ByteOrderedPartitioner</a> to achieve lexical ordering of your partitions. But it is very easy to create hotspots with that partitioner and it is generally discouraged to use it.</p>
 
 <p>The rows of a given partition are ordered by the actual values of their clustering keys. Range queries on those behave as you'd expect them to.</p>
-"
+",['partitioner']
 36741702,36809977,2016-04-20 10:58:56,Cassandra TTL not working,"<p>I am using datastax with cassandra. I want a row to be automatically deleted after 15 minutes of its insertion. But the row still remains. </p>
 
 <p>My code is below:</p>
@@ -3932,7 +3932,7 @@ That said, you could employ the <a href=""https://docs.datastax.com/en/cassandra
 <p>""TTL data has a precision of one second, as calculated on the server. Therefore, a very small TTL probably does not make much sense. Moreover, the clocks on the servers should be synchronized; otherwise reduced precision could be observed because the expiration time is computed on the primary host that receives the initial insertion but is then interpreted by other hosts on the cluster.""</p>
 
 <p>After reading this i could resolve by setting proper time on the corresponding node(machine.)</p>
-"
+",['precision']
 36764437,36766364,2016-04-21 08:49:34,Data Replication In Cassandra,"<p>I am trying to understand data replication in Cassandra. In my case, I have to store a huge number of records into a single table based on yymmddhh primary key partition.</p>
 
 <p>I have two data centers (DC1 and DC2) and I created a keyspace using below CQL.</p>
@@ -3972,7 +3972,7 @@ That said, you could employ the <a href=""https://docs.datastax.com/en/cassandra
 <p>c) Horizontally with your setup it'll scale linearly (assuming the machines are equal and have the same num_tokens value) by distributing data as according to 1 divided on number of nodes (1 node = 100%, 2 = 50%, 3 = 33%, etc.), both throughput and storage capacity will scale.</p>
 
 <p>d) No, assuming the nodejs driver works like the C++ and Python drivers of Cassandra (it should!), after connecting to Cassandra it'll be aware of the other nodes in the cluster.</p>
-"
+",['num_tokens']
 37191751,37218301,2016-05-12 15:46:34,Unable to add another node to existing node to form a cluster. Couldn't change num_tokens to vnodes,"<p>i have installed cassandra on two individual nodes both on Amazon.when i am trying to configure nodes to form a cluster the nodes. I am receiving the following error.</p>
 
 <p><strong><em>ERROR [main] 2016-05-12 11:01:26,402  CassandraDaemon.java:381 - Fatal configuration error
@@ -3999,7 +3999,7 @@ org.apache.cassandra.exceptions.ConfigurationException: Cannot change the number
 <p>This will wipe your existing cluster and cause the nodes to bootstrap from scratch again.</p>
 
 <p>Cassandra doesn't support changing between vnodes and static tokens after a datacenter is bootstrapped. If you need to change from vnodes to static tokens or vice versa in an already running cluster, you'll need to create a second datacenter using the new configuration, stream your data across, and then decomission the original nodes.</p>
-"
+",['num_tokens']
 37237596,37238543,2016-05-15 11:18:05,Change Cassandra datacenter name,"<p>Is it possible to change the datacenter name in a Cassandra Cluster?
 If so how do I accomplish this? I have a Dev cluster which was built with the default DC name 'Cassandra'. I would like to change this because we are going to be setting up and testing replication between DCs.</p>
 ",<cassandra>,"<p>Its possible you can change the snitch to GossipingFilePropertySnitch and specify the dc name and rack name in <code>cassandra-rackdc.properties</code> file, After doing that you need to restart the node, in that case you will get an error like :</p>
@@ -4014,7 +4014,7 @@ Please fix the snitch configuration, decommission and rebootstrap this node or u
 </code></pre>
 
 <p>Remember, you will need downtime for your cluster to restart your datacenter in this case if doing this on production environment.</p>
-"
+","['rack', 'dc']"
 37480186,37515887,2016-05-27 09:45:59,DataStax Community: Inconsistent reads,"<p>We're using datastax-community-64bit_2.2.6 and DevCenter-1.4.1-win-x86 on a Windows Server 2012 (and same setup on an older Win Server 2008, that does NOT seem to experience the problem).</p>
 
 <p>We have a time series table that is behaving VERY oddly with inconsistent reads. We have a full day of data, but data for some hours in the day is NOT loaded, when we perform queries - both through code and through DevCenter, as seen on the following screenshot:::</p>
@@ -4034,7 +4034,7 @@ Making this even more cryptic is the fact that we load the same data for trend g
 <p>Has anyone ever experienced anything like this??? ....it seems data for some hours are ALWAYS selectable from Cassandra, while others have issues :/
 ...and of course all data is inserted the same way!!</p>
 ",<cassandra><datastax><datastax-startup>,"<p>So, when you query it by time range, you get the data back. When you query it by exact time match, you do not get the data for some timestamps. Correct? If it is correct, it is most likely you have got your timestamps recorded with precision higher than a second. Querying by exact timestamp match is almost never a good idea, unless you know exact timestamp value up to the required precision.</p>
-"
+",['precision']
 37591435,37591944,2016-06-02 12:07:18,How to connect Node.js with Cassandra?,"<p>I've been trying to connect Node.js with Cassandra on localhost for 50 years (feel like it), but haven't figured out how they work together. I would appreciate any suggestion that could lead to solution.</p>
 
 <p><strong>Project Directory:</strong></p>
@@ -4114,7 +4114,7 @@ var client = new cassandra.Client({ contactPoints:['127.0.0.1:9042'],
 </code></pre>
 
 <p>The default user made available when using authentication is 'cassandra' with password 'cassandra', but you can change this by following <a href=""https://docs.datastax.com/en/cassandra/2.1/cassandra/security/security_config_native_authenticate_t.html"" rel=""noreferrer"">Configuring Authentication</a>.</p>
-"
+",['authenticator']
 37940630,37982696,2016-06-21 09:31:56,Cassandra Vnodes and token Ranges,"<p>I know that Vnodes form many token ranges for each node by setting num_tokens in cassandra.yaml file.</p>
 
 <p>say for example (a), i have 6 nodes, each node i have set num_token=256. How many virtual nodes are formed among these 6 nodes that is, how many virtual nodes or sub token ranges contained in each physical node.</p>
@@ -4132,7 +4132,7 @@ Node 1 calculates tokens 17, 35, 77, 92
 Node 2 calculates tokens 4, 25, 68, 85
 The ring shows the distribution of token ranges in this case
 Node 2 is responsible for token ranges 4-17, 25-35, 68-77, 85-92 and node 1 for the rest.</p>
-"
+",['num_tokens']
 38210719,38215999,2016-07-05 18:58:11,Will Cassandra avoid calculating the row MD5 if the value already is an MD5?,"<p>From various documents about Cassandra, it clearly says that it converts row keys to an MD5 before saving them in the database.</p>
 
 <p>If my row keys already are MD5 sums, is there a way to let Cassandra know and thus avoid having it calculate the MD5 of that MD5?</p>
@@ -4143,7 +4143,7 @@ Node 2 is responsible for token ranges 4-17, 25-35, 68-77, 85-92 and node 1 for 
 <p>In either case, yes, Cassandra hashes the partition key, because there is no way to let Cassandra know that it's already an MD5. </p>
 
 <p>If you <strong>really</strong> want to avoid the hashing, you can look at other alternative partitioners (such as <a href=""https://github.com/apache/cassandra/blob/trunk/src/java/org/apache/cassandra/dht/ByteOrderedPartitioner.java"" rel=""nofollow"">byte ordered</a> or <a href=""https://github.com/apache/cassandra/blob/trunk/src/java/org/apache/cassandra/dht/OrderPreservingPartitioner.java"" rel=""nofollow"">order preserving</a> ), or write your own that implements <a href=""https://github.com/apache/cassandra/blob/trunk/src/java/org/apache/cassandra/dht/IPartitioner.java"" rel=""nofollow"">IPartitioner</a> . Note, though, that if you do use a different partitioner, it's used for all tables/keyspaces in the cluster. </p>
-"
+",['partitioner']
 38254971,38255215,2016-07-07 20:46:26,"Datastax Cassandra Driver always attempts to connect to localhost, even though it's not configured to do so","<p>So I have the following Client code: </p>
 
 <pre><code>def getCluster:Session = {
@@ -4189,7 +4189,7 @@ Node 2 is responsible for token ranges 4-17, 25-35, 68-77, 85-92 and node 1 for 
 </blockquote>
 <p>If you leave both of these to the defaults, <code>localhost</code> will be the default address cassandra will communicate to connect on.</p>
 <p>After the driver is able to connect to a contact point, it queries the <code>system.local</code> and <code>system.peers</code> table of the contact point to determine which hosts to connect to, the addresses those tables communicate are from <code>rpc_address</code>/<code>broadcast_rpc_address</code></p>
-"
+",['rpc_address']
 38296328,38315855,2016-07-10 20:46:57,How to add a decommissioned node in cassandra?,"<p>I just did nodetool decommission and it removed the node and I am trying to add it back in so I just started cassandra(decomissioned node) again but it doesnt seem to join the cluster?</p>
 ",<cassandra>,"<p>The other nodes will remember that the host ID you decommissioned should no longer be part of the cluster and will refuse to talk to it.</p>
 
@@ -4206,7 +4206,7 @@ rm &lt;old logfiles in /var/log/cassandra/&gt;
 </code></pre>
 
 <p>Then restart the Cassandra service</p>
-"
+","['data_file_directories', 'commitlog_directory', 'saved_caches_directory']"
 38506734,38509423,2016-07-21 14:17:47,Cassandra commit log clarification,"<p>I have read over several documents regarding the Cassandra commit log and, to me, there is conflicting information regarding this ""structure(s)"". The diagram shows that when a write occurs, Cassandra writes to the memtable and commit log. The confusing part is where this commit log resides.</p>
 
 <p>The diagram that I've seen over-and-over shows the commit log on disk. However, if you do some more reading, they also talk about a commit log buffer in memory - and that piece of memory is flushed to disk every 10 seconds.</p>
@@ -4247,7 +4247,7 @@ rm &lt;old logfiles in /var/log/cassandra/&gt;
 </code></pre>
 
 <p>The <code>periodic</code> offers better performance at the cost of a small increase in the chance that data can be lost.  The <code>batch</code> setting guarantees durability at the cost of latency.</p>
-"
+",['commitlog_sync_batch_window_in_ms']
 38718623,38721676,2016-08-02 11:01:37,Connecting two desktop PC into multi node cluster Cassandra,"<p>I'm doing this for the very first time and I need help about clearing some stuffs. 
 I have Ubuntu 14.04 desktop on one machine, and on the other I have Windows 8.1. also on both machines I have installed the same version of Cassandra. </p>
 
@@ -4261,7 +4261,7 @@ I have Ubuntu 14.04 desktop on one machine, and on the other I have Windows 8.1.
 </ol>
 
 <p>Note: Make sure you can ping each machine from the other on the IP address you use for the listen_address and make sure that the storage_port 7000 isn't blocked by a firewall on either machine.</p>
-"
+","['listen_address', 'storage_port']"
 38730024,38733805,2016-08-02 20:37:57,cannot connect to local Cassandra instance?,"<p>I am a Cassandra newbie so this is a very rudimentary question. For my project I need an older version of Cassandra, so I installed it like so: </p>
 
 <pre><code>brew install python
@@ -4295,7 +4295,7 @@ cassandra22 started tracyxia  /Users/tracyxia/Library/LaunchAgents/homebrew.mxcl
 <p>listen_address : 192.168.1.15 (configure local IP)</p>
 
 <p>rpc_address : 0.0.0.0</p>
-"
+","['listen_address', 'rpc_address']"
 38738282,38857262,2016-08-03 08:26:06,YCSB low read throughput cassandra,"<p>The <a href=""http://www.datastax.com/wp-content/themes/datastax-2014-08/files/NoSQL_Benchmarks_EndPoint.pdf"" rel=""nofollow"">YCSB Endpoint benchmark</a> would have you believe that Cassandra is the golden child of Nosql databases.  However, recreating the results on our own boxes (8 cores with hyperthreading, 60 GB memory, 2 500 GB SSD), we are having dismal read throughput for workload b (read mostly, aka 95% read, 5% update).</p>
 
 <p>The cassandra.yaml settings are exactly the same as the Endpoint settings, barring the different ip addresses, and our disk configuration (1 SSD for data, 1 for a commit log).  While their throughput is ~38,000 operations per second, ours is ~16,000 regardless (relatively) of the threads/number of client nodes.  I.e. one worker node with 256 threads will report ~16,000 ops/sec, while 4 nodes will each report ~4,000 ops/sec</p>
@@ -4372,7 +4372,7 @@ timeseries.granularity=1000
 ",<cassandra><benchmarking><ycsb>,"<p>The key was increasing native_transport_max_threads in the casssandra.yaml file.</p>
 
 <p>Along with the increased settings in the comment (increasing connections in ycsb client as well as concurrent read/writes in cassandra), Cassandra jumped to ~80,000 ops/sec.</p>
-"
+",['native_transport_max_threads']
 38931909,38974587,2016-08-13 10:49:10,Cassandra : Batch write optimisation,"<p>I get bulk write request for let say some 20 keys from client.
 I can either write them to C* in one batch or write them individually in async way and wait on future to get them completed.</p>
 
@@ -4400,7 +4400,7 @@ Then, you could group your requests by equality of partition key, that would pro
 <p>If you wish to go further and mimic cassandra hashing, then you should look at cluster metadata via <code>getMetadata</code> method in <code>com.datastax.driver.core.Cluster</code> class, there is method <code>getTokenRanges</code> and compare them to result of <code>Murmur3Partitioner.getToken</code> or any other partitioner you configured in <code>cassandra.yaml</code>. I've never tried that myself though.</p>
 
 <p>So, I would recommend to implement first approach, and then benchmark your application. I'm using that approach myself, and on my workload it works far better than without batches, let alone batches without grouping.</p>
-"
+",['partitioner']
 38973463,38976606,2016-08-16 11:15:02,How to update configuration of a Cassandra cluster,"<p>I have a 3 node Cassandra cluster and I want to make some adjustments to the cassandra.yaml</p>
 
 <p>My question is, how should I perform this? One node at a time or is there a way to make it happen without shutting down nodes?</p>
@@ -4413,7 +4413,7 @@ Then, you could group your requests by equality of partition key, that would pro
 <li><p>Many settings can be changed without a restart via JMX, though I don't have a documentation link handy. Changing via JMX WON'T change cassandra.yml though, so you'll need to update that also or your config will revert back to what's in the file when the node restarts.</p></li>
 <li><p>If you're using DSE, OpsCenter's Lifecycle Manager feature makes updating configs a simple point-and-click affair (disclaimer, I'm biased as I'm an LCM dev).</p></li>
 </ol>
-"
+",['rack']
 39144713,39151096,2016-08-25 11:58:51,Cassandra compaction takes too much RAM,"<p>Running an 8-node Cassandra 2.2.5 cluster with a CF about 1TB big. </p>
 
 <p>Switching to LeveledCompactionStrategy for this CF causes thousands of compaction jobs, which doesn't seem to be problem by itself. But Cassandra starts using constantly increasing amount of RAM, eventually getting killed by the kernel.</p>
@@ -4429,7 +4429,7 @@ Then, you could group your requests by equality of partition key, that would pro
 
 <p>If there is no load on the cluster then you could also try starting cassandra with the disable_stcs_in_l0 parameter in cassandra-env.sh to see if that helps. This will disable sizetiered compaction in L0 which should reduce the total number of compactions to recompact all the data into LCS (however the recompaction will still take a long time with 1TB of data).
 <code>-Dcassandra.disable_stcs_in_l0=true</code></p>
-"
+",['concurrent_compactors']
 39172412,39173864,2016-08-26 18:15:08,SQL vs Cassandra Data type mappings,"<p>I am mapping some data types from SQL server to cassandra, such as int to bigint, real to float, varchar to text. Where can I get the mappings from SQL server to cassandra?</p>
 ",<sql-server><cassandra>,"<p>Looking at <a href=""https://docs.datastax.com/en/cql/3.0/cql/cql_reference/cql_data_types_c.html"" rel=""nofollow"">CQL Data Types</a> descriptions compared to <a href=""https://msdn.microsoft.com/en-us/library/ms187752.aspx"" rel=""nofollow"">SQL Server Data Types</a>, here are some mappings, but there's no guarantees (not overly confident considering the typos in the CQL Data Types reference) they are accurate. </p>
 
@@ -4465,7 +4465,7 @@ blob               ?        binary, varbinary      Not clear what the limits are
 
 uuid               ?        uniqueidentifier       uuid follows standard UUID format, most likely 128 bits (16 bytes) which is the same storage size as uniqueidentifier. Not clear on the conversion behaviour
 </pre>  
-"
+",['precision']
 39498313,39499421,2016-09-14 19:34:01,How to force Cassandra not to use the same node for replication in a schema with vnodes,"<p>Installing Cassandra in a single node to run some tests, we noticed that we were using a RF of 3 and everything was working correctly.</p>
 
 <p>This is of course because that node has 256 vnodes (by default) so the same data can be replicated in the same node in different vnodes.</p>
@@ -4488,7 +4488,7 @@ uuid               ?        uniqueidentifier       uuid follows standard UUID fo
 </blockquote>
 
 <p>Look at <a href=""https://docs.datastax.com/en/cassandra/2.0/cassandra/architecture/architectureDataDistributeReplication_c.html"" rel=""nofollow"">DataStax documentation</a> for more information.</p>
-"
+",['rack']
 39654992,39875069,2016-09-23 07:24:08,sstableloader not loading data into DSE 4.5.1 Cassandra cluster,"<p>I have SSTables copied from a source placed here : 
 <code>/dev/shm/datafiles/node1/ppr/online_inv</code></p>
 
@@ -4509,7 +4509,7 @@ Streaming session ID: <code>86e92720-815c-11e6-b0c0-45a6be0356e5</code></p>
 <p><code>INFO [RMI TCP Connection(14)-10.241.17.107] 2016-09-23 07:02:01,482 OutputHandler.java (line 42) Streaming relevant part of /dev/shm/datafiles/node3/look/look_details/look-look_details-jb-1240-Data.db /dev/shm/datafiles/node3/look/look_details/look-look_details-jb-1239-Data.db /dev/shm/datafiles/node3/look/look_details/look-look_details-jb-1237-Data.db /dev/shm/datafiles/node3/look/look_details/look-look_details-jb-1236-Data.db /dev/shm/datafiles/node3/look/look_details/look-look_details-jb-1235-Data.db to []
 </code></p>
 ",<cassandra><datastax><cassandra-2.0><datastax-enterprise><cassandra-2.1>,"<p>The issue was related to snitch settings which picked up default names of DC and rack as 'Cassandra' &amp; 'rack1' . Altered the schema definition and problem was resolved .</p>
-"
+",['rack']
 39839133,39840707,2016-10-03 19:36:41,Understanding the Token Function in Cassandra,"<p>Hello I was reading the Cassandra documentation on Token Function,</p>
 
 <p><a href=""https://i.stack.imgur.com/PoeKh.png"" rel=""noreferrer""><img src=""https://i.stack.imgur.com/PoeKh.png"" alt=""Screenshot of documentation, https://docs.datastax.com/en/cql/3.1/cql/cql_using/paging_c.html""></a></p>
@@ -4553,7 +4553,7 @@ Streaming session ID: <code>86e92720-815c-11e6-b0c0-45a6be0356e5</code></p>
 <p>That said, the recommended partitioner for new clusters is <a href=""https://docs.datastax.com/en/cassandra/3.x/cassandra/architecture/archPartitionerM3P.html"" rel=""noreferrer""><em>Murmur3Partitioner</em></a>, you can check the <a href=""https://docs.datastax.com/en/cassandra/3.x/cassandra/architecture/archPartitionerAbout.html"" rel=""noreferrer"">documentation</a> for both pros and cons of each partitioner. Please note that the partitioner is a <strong>cluster-wide</strong> settings, and once set you cannot change it without pushing all of your data into another cluster. </p>
 
 <p>Make your choice carefully.</p>
-"
+",['partitioner']
 39893193,41800447,2016-10-06 10:08:51,cassandra cql shell window got disappears after installation in windows,"<p>cassandra cql shell window got disappears after installation in windows?
 this was installed using MSI installer availalbe in planet cassandra.</p>
 
@@ -4569,7 +4569,7 @@ this was installed using MSI installer availalbe in planet cassandra.</p>
 <p>cdc_raw_directory: ""C:/Program Files/DataStax-DDC/data/cdc_raw"" </p>
 
 <p>Step 3: Goto Windows Services and Start the DataStax DDC Server 3.9.0 Service</p>
-"
+",['cdc_raw_directory']
 41575900,41816383,2017-01-10 18:32:09,Accessing cassandra without hardcoded username password,"<p>I have an existing Datastax Cassandra setup that is working. We just added authentication to the system and now we can log in with our AD accounts. This is very nice and certainly works. However applications need to use a hard-coded username/password in order to connect.</p>
 
 <p>In SQL Server we were able to setup a user to run the service as and then it would connect and work through AD. However in Cassandra it is not the same.</p>
@@ -4600,7 +4600,7 @@ this was installed using MSI installer availalbe in planet cassandra.</p>
 <blockquote>
   <p>When using Active Directory set the filter to <code>(sAMAccountName={0})</code></p>
 </blockquote>
-"
+",['authenticator']
 41587806,41590463,2017-01-11 10:03:31,cassandra sharding and replication,"<p>I am new to Cassandra was going though <a href=""https://academy.datastax.com/resources/brief-introduction-apache-cassandra"" rel=""noreferrer"">this Article</a> explaining sharding and replication and I am stuck at a point that is - </p>
 
 <p>I have a cluster with 6 Cassandra nodes configured at my local machine. I create a new keyspace ""TestKeySpace"" with replication factor as 6 and a table in keyspace ""employee"" and primary key is auto-increment-number named RID.
@@ -4734,7 +4734,7 @@ Let's take another example -</p>
 <p>For user id 448454, the calculated hash is say 3074457345618258609, so this row will be save at Node2 (look for the initial_token value for node 2 in above configuration) and also get copied in clockwise direction to Node3 and Node4 (remember we have specified replication factor of 3, so only three copies Noe2, Node3, Node4). </p>
 
 <p>Hope this helps.</p>
-"
+","['partitioner', 'initial_token']"
 41678142,41686156,2017-01-16 14:02:35,How are nodes decided for replication in Cassandra,"<p>I am trying to understand how exactly data is replicated on multiple nodes in Cassandra. Lets assume we have 6 nodes and replication factor is 3. For all simplicity, lets assume single datacenter and single rack. Since RF is 3,data is stored in 3 replicas. I want to understand how the 3 replicas are decided.</p>
 
 <p>Referring to example in <a href=""http://www.datastax.com/dev/blog/virtual-nodes-in-cassandra-1-2"" rel=""nofollow noreferrer"">http://www.datastax.com/dev/blog/virtual-nodes-in-cassandra-1-2</a> (first image second part i.e, with virtual nodes), lets say our row falls under virtual node 'E' as decided by partitioner. So the row must be present in Node 1, 5, 6 according to distribution of virtual nodes among different nodes.</p>
@@ -4765,7 +4765,7 @@ Let's take another example -</p>
 
 <p>Absolutely the same rules apply with virtual nodes and ordinary consistent hashing, you go around the ring to select
 the replicas. If during your going around the ring you stumble upon the same node again you just skip it and continue until you find all the nodes that own the data according to the replication factor that you desire.</p>
-"
+",['num_tokens']
 41776345,41807621,2017-01-21 06:21:01,Cassandra failed to connect,"<p>I'm newbie in cassandra apache. In the tutorial video, it says type bin/nodetools status to check the status of node but when I tried to input it. Terminal returns </p>
 
 <pre><code>Failed to connect to '127.0.0.1:7199' - ConnectException: 'Connection
@@ -4800,7 +4800,7 @@ INFO  [main] 2017-01-21 13:57:49,429 CassandraDaemon.java:521 - Not starting RPC
 <li>Set listen_address and broadcast_rpc_address to local ip (ifconfig &gt; ip-address-of-system).</li>
 <li>Restart Cassandra.</li>
 </ol>
-"
+","['listen_address', 'broadcast_rpc_address']"
 42331153,42689476,2017-02-19 18:29:49,rpc_address and broadcast_rpc address for cassandra.yaml for Datastax OpsCenter,"<p>So I have a single node cassandra running on an AWS machine which also has the OpsCenter installed. I'm trying to manage it with OpsCenter GUI from a windows machine (which is in the same private network as the cassandra node)however I keep getting the following error </p>
 
 <p>""No HTTP communication to the agent""</p>
@@ -4851,7 +4851,7 @@ tcp6       0      0 [::]:61621              [::]:*                  LISTEN</p>
 <p>That is your mistake, change the rpc_address to the local IP --> 172.18.51.175 [if this is the nodes IP] </p>
 
 <p>Check in cassandra.yaml file that the listen_address is also set to --> 172.18.51.175</p>
-"
+","['listen_address', 'rpc_address', 'broadcast_rpc_address']"
 42542845,42543413,2017-03-01 21:55:15,Apache Cassandra 3.10 IllegalArgumentException - Invalid token for Murmur3Partitioner,"<p>The token value that I'm using:</p>
 
 <pre><code>initial_token: 85070591730234615865843651857942052864
@@ -4897,7 +4897,7 @@ java.lang.IllegalArgumentException: Invalid token for Murmur3Partitioner. Got 85
 
 <pre><code># initial_token:
 </code></pre>
-"
+",['partitioner']
 42694324,42695309,2017-03-09 11:33:25,"Cassandra (replication factor: 2, nodes: 3) and lightweight transactions","<p>We have a cassandra cluster running with 3 nodes and a replication factor of 2 -> maybe we should have selected 3 from the start, but this is not the case.</p>
 
 <p>Our quorum is therefore = 2/2 + 1 = 2</p>
@@ -4921,7 +4921,7 @@ In your case even though you have 2 nodes up Node1 (token A) and Node2 (token B)
 <p>So to insert you must either increase replication to 3 or decrease the consistency to 1.</p>
 
 <p>To know more on consistency see this docs <a href=""https://docs.datastax.com/en/cassandra/2.1/cassandra/dml/dml_config_consistency_c.html"" rel=""noreferrer"">https://docs.datastax.com/en/cassandra/2.1/cassandra/dml/dml_config_consistency_c.html</a></p>
-"
+",['partitioner']
 42878994,43495516,2017-03-18 19:40:21,Remove Duplicates without shuffle Spark,"<p>I have a Cassandra table XYX with columns(
 id uuid,
 insert a timestamp,
@@ -4953,7 +4953,7 @@ rdd.partitioner
 val df = rdd.groupByKey.flatMap {case (key,group) =&gt; group.toSeq.distinct}
     .toDF(""id"", ""header"")
 </code></pre>
-"
+",['partitioner']
 42932204,42935733,2017-03-21 15:58:03,Cassandra - Which IP address do you use to connect to a cluster when using a driver?,"<p>I have deployed a 3-node Cassandra cluster on AWS (EC2).  I'm trying to connect to the cluster from a .NET console application running on my computer.  The Datastax website provides the following code sample for connecting to a local instance:</p>
 
 <p><code>Cluster cluster = Cluster.Builder().AddContactPoint(""127.0.0.1"").Build();</code></p>
@@ -4973,7 +4973,7 @@ listen_address: *EC2's private IP address*
 
 <p>Thanks in advance.</p>
 ",<.net><amazon-web-services><amazon-ec2><cassandra>,"<p>For the broadcast_rpc_address you would use the EC2's Public IP address as that's the address at which all your clients be connecting. listen_address is used for internode communication between nodes in the cluster. </p>
-"
+","['listen_address', 'broadcast_rpc_address']"
 43164047,43165262,2017-04-02 02:39:16,Cassandra: Who creates/distributes virtual Nodes among nodes - Leader?,"<p>In Cassandra, virtual nodes are created and distributed among nodes as given in <a href=""http://www.datastax.com/dev/blog/virtual-nodes-in-cassandra-1-2"" rel=""nofollow noreferrer"">http://www.datastax.com/dev/blog/virtual-nodes-in-cassandra-1-2</a>. But who does that process ? Creating the virtual nodes, distributing among peers. Is it some sort of leader ? How does it work ?</p>
 
 <p>Also in case a node joins, virtual nodes are re-distributed. Lot more similar actions are present. Who does all those ?</p>
@@ -4991,7 +4991,7 @@ The rest of the cluster will be aware about the changes by ""gossiping"" - using
 <p>Here's good article about it:</p>
 
 <p><a href=""http://cassandra.apache.org/doc/latest/operating/topo_changes.html"" rel=""nofollow noreferrer"">http://cassandra.apache.org/doc/latest/operating/topo_changes.html</a></p>
-"
+",['num_tokens']
 44170542,44340008,2017-05-25 00:38:45,Cassandra - how to disable memtable flush,"<p>I'm running Cassandra with a very small dataset so that the data can exist on memtable only. Below are my configurations:</p>
 
 <p>In jvm.options: </p>
@@ -5029,7 +5029,7 @@ memtable_offheap_space_in_mb  will roughly come to around 1GB. Since you have me
 <p>Let me know if you have any other question. </p>
 
 <p>I hope this helps.</p>
-"
+",['memtable_cleanup_threshold']
 44378650,44394326,2017-06-05 22:26:28,Cassandra config change to use hostnames after ip's changed,"<p>Initial installation of Cassandra was done using IP addresses and it has been working for 6+ months.  This past weekend DevOps changed security to not allow IP addresses and also reassigned new IP addresses.  I modified the required files (cassandra.yaml, cassandra-rackdc.properties, etc) to contain hostnames.  The issue is nodetool status gives the error, Failed to connect to '127.0.0.1:7199, and I do have JVM_OPTS=""$JVM_OPTS -Djava.rmi.server.hostname=blah"" in cassandra-env.sh. Any ideas how to proceed to the environment back up?  Should I go through the same files and replace hostnames with the new IP addresses?  Thanks.  </p>
 ",<cassandra>,"<p>There are two options to provide listen address in Cassandra.yaml. </p>
 
@@ -5085,7 +5085,7 @@ lo        Link encap:Local Loopback
 </code></pre>
 
 <p>Restart Cassandra and you should be good to go. <strong>Another advantage is that Cassandra.yaml no longer has to be different across your nodes</strong> (assuming all have the same network interface).</p>
-"
+","['listen_address', 'listen_interface']"
 44501087,44501203,2017-06-12 13:48:48,Checking health of all cassandra nodes,"<p>I am writing tests to check metadata information of cassandra keyspace and tables.
 I also want to check which node is up or which is down in a cluster. how can I do it?</p>
 ",<node.js><cassandra><cassandra-node-driver>,"<p>The nodetool utility gives you access to diagnostic and operational information.</p>
@@ -5114,7 +5114,7 @@ client.connect()
     return client.shutdown();
   });
 </code></pre>
-"
+","['rack', 'dc']"
 44602971,44603433,2017-06-17 09:33:58,How to re-shuffle data in Cassandra when adding a new node?,"<p>I need to add more nodes to our Cassandra cluster but it is unclear to me how to do this properly based on the doc:</p>
 
 <p><a href=""http://docs.datastax.com/en/cassandra/2.1/cassandra/operations/ops_add_node_to_cluster_t.html"" rel=""nofollow noreferrer"">http://docs.datastax.com/en/cassandra/2.1/cassandra/operations/ops_add_node_to_cluster_t.html</a></p>
@@ -5138,7 +5138,7 @@ client.connect()
 <p>It is recommended to use vnodes which will balance your cluster. Earlier Cassandra versions lesser than 1.1 does not have vnodes, So we used to generate the tokens and configured in initial_token parameter available in cassandra.yaml file. </p>
 
 <p>Hence in Cassandra versions 1.2 or higher, using of vnodes is enough to balance the cluster, no need for re-shuffle data. </p>
-"
+",['initial_token']
 44664028,44664640,2017-06-20 22:31:34,Access Cassandra from separate docker container using docker-compose,"<p>I am trying to connect to a cassandra container from a separate container (named main). </p>
 
 <p>This is my docker-compose.yml</p>
@@ -5176,7 +5176,7 @@ services:
 ",<docker><cassandra><docker-compose>,"<p>I figured out the answer. Basically, in the cassandra.yaml file it sets the default rpc_address to localhost. If this is the case, Cassandra will only listen for requests on localhost, and will not allow connections from anywhere else. In order to change this, I had to set rpc_address to my ""cassandra"" container so my main container (and any other containers) could access Cassandra using the cassandra container ip address.</p>
 
 <p><code>rpc_address: cassandra</code></p>
-"
+",['rpc_address']
 44792836,44793619,2017-06-28 02:47:50,How to getendpoints of a composite partition key which has blob datatype in it,"<p>I have a select query which is timing out, so i tried querying it using consistency all with tracing enabled, so that read_repair will fix it but that didn't helped much and at consistency all i was getting 3 responses out of 9; so i have decided to identify partition and run a repair on it but when i ran getendpoints on composite partition key which has blob datatype it is throwing an exception ""java.lang.NumberFormatException: Non-hex characters"" i also tried using token from cql select statement which also timing out. How can i identify the partition and repair it ??</p>
 ",<cassandra><datastax><datastax-enterprise><cassandra-2.1>,"<p>If you just run a repair all partitions will be fixed. To repair an individual partition just read it with <code>CL.ALL</code> and read repairs will fix any differences.</p>
 
@@ -5188,12 +5188,12 @@ services:
 </code></pre>
 
 <p>and it will give you the token. Alternatively you can get the token from most of the drivers (java driver: <code>cluster.getMetadata().newToken(string)</code>) or from the Cassandra's java api itself (<code>new Murmur3Partitioner().getToken(bytebuffer)</code>)</p>
-"
+",['partitioner']
 45139240,45139390,2017-07-17 08:23:04,Python Cassandra floating precision loss,"<p>I'm sending data back and forth Python and Cassandra. I'm using both builtin  <code>float</code> types in my python program and the data type for my Cassandra table. If I send a number <code>955.99</code> from python to Cassandra, in the database it shows <code>955.989999</code>. When I send a query in python to return the value I just sent, it is now <code>955.989990234375</code>.</p>
 
 <p>I understand the issue with precision loss in python, I just wanted to know if there's any built-in mechanisms in Cassandra that could prevent this issue.  </p>
 ",<python><cassandra><floating-point><precision><cassandra-python-driver>,"<p>Python <code>float</code> is an 64-bit IEEE-754 <strong>double</strong> precision binary floating point number. Use <a href=""http://cassandra.apache.org/doc/latest/cql/types.html"" rel=""noreferrer""><code>double</code></a> in Cassandra for a matching type.</p>
-"
+",['precision']
 45306061,45403269,2017-07-25 14:19:56,Cassandra WriteTimeoutException exception in CounterMutationStage - node dies eventually,"<p>I'm getting the following exception in my cassandra system.log:</p>
 
 <pre><code>WARN  [CounterMutationStage-25] 2017-07-25 13:25:35,874 AbstractLocalAwareExecutorService.java:169 - Uncaught exception on thread Thread[CounterMutationStage-25,5,main]: {}
@@ -5252,7 +5252,7 @@ Moving the node from Windows to Linux (and configuring it according to <a href="
 <li>If feasible, try separating the commitlog directory and data directory storage drives.</li>
 <li>Best bet to scale writes is to add more boxes (which could be smaller in configuration).</li>
 </ul>
-"
+",['concurrent_writes']
 46166650,46174958,2017-09-12 01:41:58,View Cassandra Partitions using CQLSH,"<p>Using Cassandra, how do i see how many partitions were created base on how i created the primary key? I have been following a tutorial and it mentions to go to <code>bin/cassandra-cli</code> and use the <code>LIST</code> command. However, the latest Cassandra install does not come with this and I have read other articles online that have indicated that cli is now deprecated. </p>
 
 <p>Is there anyway for me to see the partitions that were created using cqlsh? </p>
@@ -5316,7 +5316,7 @@ Address    Rack        Status State   Load            Owns                Token
 <p>This tells where the records with the partition key 'first' are located.</p>
 
 <p><strong>NOTE:</strong> If some of the nodes are down, <code>getendpoints</code> command won't list those nodes, even though they should store the record based on replication settings.</p>
-"
+","['num_tokens', 'initial_token']"
 46370588,46375005,2017-09-22 17:54:17,Spark CassandraTableScanRDD KeyBy not retaining all columns,"<pre><code>CASSANDRA_TABLE has (some_other_column, itemid) as primary key.
 
 val cassandraRdd: CassandraTableScanRDD[CassandraRow] = sparkSession.sparkContext
@@ -5351,7 +5351,7 @@ temp2.take(10).foreach(println)
     .keyBy[(String, String)](""some_other_column"", ""itemid"")
 } 
 </code></pre>
-"
+",['partitioner']
 47442426,47465001,2017-11-22 19:23:52,DataStax Python Cassandra Driver wrongly discovering Cassandra on localhost,"<p>I have this little university project and I have developed a simple Python app  with Bokeh frontend and Cassandra backend. I have been prototyping it and developing on a single Cassandra node and then scaled up to three nodes, one native, two virtualized. Therefore the development was on localhost, then I migrated to using a Host-only network named vboxnet0 with IP addresses:</p>
 
 <ul>
@@ -5422,7 +5422,7 @@ ConnectionRefusedError: [Errno 111] Tried connecting to [('127.0.0.1', 9042)]. L
 <p>You need to set rpc_address to the address of the machine. Make sure to do this on each of your nodes in the cluster. Follow these steps to make sure you're not missing any configuration: <a href=""http://cassandra.apache.org/doc/latest/getting_started/configuring.html#main-runtime-properties"" rel=""nofollow noreferrer"">http://cassandra.apache.org/doc/latest/getting_started/configuring.html#main-runtime-properties</a></p>
 
 <p>Also make sure to set the seed to the same ip/ips for all nodes. The seed is simply just the ip of one/many nodes in the cluster that the nodes will connect to when starting up. It's recommended to have two seeds per DC and it should be the same for all nodes.</p>
-"
+",['rpc_address']
 47467491,47482316,2017-11-24 06:26:44,Cassandra - Dev center not able to connect to all the 3 nodes of Cassandra cluster,"<p>I'm new to Cassandra and EC2 configuration.</p>
 
 <p>I have configured 3 nodes in AWS EC2 instances with Cassandra 3.0 and all the three nodes are connected to each other .</p>
@@ -5453,7 +5453,7 @@ it's working finally
 
 Thanks Utpal
 </code></pre>
-"
+","['listen_address', 'broadcast_address', 'rpc_address', 'broadcast_rpc_address']"
 48060940,48071599,2018-01-02 12:22:27,Unable to run cqlsh(connection refused),"<p>I'm getting a connection error ""unable to connect to any server"" when I run .cqlsh command from the bin directory of my node. </p>
 
 <p>I'm using an edited yaml file containing only the following(rest all values present in the default yaml have been omitted) :</p>
@@ -5479,7 +5479,7 @@ Cassandra: 3.0.14</p>
 <li>Finally, run ./cqlsh , provide ip_address if it is a remote server.</li>
 <li>Check the nodetool status and confirm whether the node is up and normal.</li>
 </ol>
-"
+",['data_file_directories']
 48257958,48271228,2018-01-15 06:31:20,What is the best way to clear unused Cassandra directories,"<p>Why cassandra's gc didn't delete unused directories of column family during compaction? How can I delete them safely?</p>
 
 <p>I have a 5 nodes Cassandra cluster:</p>
@@ -5612,7 +5612,7 @@ drwxr-xr-x. 3 cassandra cassandra 4096 янв 15 11:50 events-c156cc40e65111e7a2
 <p>Now remove the other table directories manually by ""rm -rf"" for the UUID's that doesn't correspond in the above output.</p>
 
 <p>Also the reason ""nodetool listsnapshots"" isn't giving any snapshots, because the active table doesn't have any. But if you go to any of the other 4 ""events"" table directory and do a ""ls -ltr"" you should be able to find snapshot directories inside them, which were created as the table was dropped.</p>
-"
+",['auto_snapshot']
 48560390,48565375,2018-02-01 10:23:37,Connect remote scylla db server shows error,"<p>I have installed scylla-db in google cloud servers.</p>
 
 <p><strong>Steps i have followed:</strong></p>
@@ -5710,7 +5710,7 @@ while checking the <a href=""http://xx.xx.xxx:10000"" rel=""nofollow noreferrer"
 <p>To gain access via cql you need to edit the /etc/scylla/scylla.yaml file and set the rpc_address </p>
 
 <p>Please follow the instructions for configuring scylla for a cluster deployment: single dc <a href=""http://docs.scylladb.com/procedures/create_cluster/"" rel=""noreferrer"">http://docs.scylladb.com/procedures/create_cluster/</a> or multi dc <a href=""http://docs.scylladb.com/procedures/create_cluster_multidc/"" rel=""noreferrer"">http://docs.scylladb.com/procedures/create_cluster_multidc/</a>.</p>
-"
+","['rpc_address', 'dc']"
 48608390,48616848,2018-02-04 13:09:41,"Yaml change not detected,Exception encountered during startup: Invalid yaml: file:/etc/cassandra/cassandra.yaml","<p>I have changed Cassandra configuration file</p>
 
 <pre><code>cat /etc/cassandra/cassandra.yaml | grep -n 'seed'
@@ -5756,7 +5756,7 @@ system.local gets changed only locally
 
 <p>Please check this link as well:
 <a href=""https://surbhinosqldba.wordpress.com/2015/07/23/how-to-rename-modify-cassandra-cluster-name/"" rel=""nofollow noreferrer"">https://surbhinosqldba.wordpress.com/2015/07/23/how-to-rename-modify-cassandra-cluster-name/</a></p>
-"
+",['cluster_name']
 48732843,48732954,2018-02-11 14:58:49,Secondary index relating to Replication Factor,"<p>I am using the Secondary index for one of the column in Cassandra table.,</p>
 
 <p>Say I have a <strong>5 node cluster</strong> (192.168.1.1, 192.168.1.2, 192.168.1.3, 192.168.1.4, 192.168.1.5) with the Keyspace <strong>replication factor as '3'</strong> and considering the following table,</p>
@@ -5801,7 +5801,7 @@ system.local gets changed only locally
 <p>Remember secondary index are local to data in every node of that cluster and hence present in all nodes of the cluster. Additional reference <a href=""https://stackoverflow.com/questions/48729254/high-availability-on-secondary-index-in-cassandra"">here</a>.</p>
 
 <p><strong>In short, there is no direct correlation of Replication factor to Secondary index.</strong></p>
-"
+",['dc']
 49061398,49067290,2018-03-02 01:29:33,"Cassandra Geolocation, to index or not to index?","<p>My goal is to be able to write a query such that I can find all of the rows in a table between a certain radius of a lat and long.</p>
 
 <p>So a query like this:</p>
@@ -5827,7 +5827,7 @@ system.local gets changed only locally
 <p>I'm not sure about your requirements. But you could consider using <a href=""https://en.wikipedia.org/wiki/Geohash"" rel=""nofollow noreferrer"">Geohash</a>. Geohash is the encoded form of both longitude and latitude. It can get pretty precise as well. By using geohash strings, you can play a tradeoff game between the length of your geohash in characters and their precision <em>(the lengthier the string, the more pricise they become)</em>. Perhaps you may set the geohash as your index column which implies that the lengthier the geohash, the more distinct values the column would have. You may even consider setting it as the primary key to take the performace to a higher level.</p>
 
 <p><em>Or maybe, you could set two primary keys. One, to keep short geohash, and another one to keep the longer hash for the same location if you want different level of precision :)</em></p>
-"
+",['precision']
 49103434,49103548,2018-03-05 04:20:00,Which node a replica is stored in the cassandra ring?,"<p>The data is stored on the ring based on rowkeys, but the replica's row key is the same with the original, then the replica would be stored in the same node in the ring. How does cassandra decide where to store the replica? </p>
 ",<cassandra>,"<p>Data partitioner determines coordinator node for each key. The coordinator node is the fist replica for a key which is also called primary replica. If replication factor is N, a key's coordinator node replicates it to other N-1 replicas.</p>
 
@@ -5855,7 +5855,7 @@ system.local gets changed only locally
 192.168.122.14
 192.168.122.12
 </code></pre>
-"
+",['partitioner']
 49274714,49275834,2018-03-14 10:02:16,How to take advantage of Cassandra partitioner using DataFrames?,"<p>According to <a href=""https://github.com/datastax/spark-cassandra-connector/blob/master/doc/16_partitioning.md"" rel=""nofollow noreferrer"">documentation</a>, Cassandra Partitioner can help to reduce shuffles improving overall performance. To take advantage of partitioner I should use <code>keyBy</code> method. Given table:</p>
 
 <pre><code>CREATE TABLE data_storage.dummy (
@@ -5885,7 +5885,7 @@ PRIMARY KEY (id)
 <p>Is there any way to pass information to DataFrame reader about how data should be queried (something like <code>keyBy()</code> method for DataFrame)</p>
 ",<scala><apache-spark><cassandra><spark-dataframe><spark-cassandra-connector>,"<p>You don't need to specify partitioner in case of DataFrame. You just need to make sure <code>pushdown</code> is set to <code>true</code> for the Cassandra DataFrame.
 Check this doc <a href=""https://github.com/datastax/spark-cassandra-connector/blob/master/doc/14_data_frames.md#automatic--predicate-pushdown-and-column-pruning"" rel=""nofollow noreferrer"">Automatic Predicate Pushdown and Column Pruning</a>.</p>
-"
+",['partitioner']
 49393722,49394516,2018-03-20 20:40:51,Cassandra: dropping keyspace with tables containing numerous user defined types,"<p>I am in a situation where I would like to drop a keyspace which can also <em>safely</em> delete all the contained tables' various user defined types. </p>
 
 <p>The official document of CQL Cassandra states: </p>
@@ -5899,7 +5899,7 @@ Check this doc <a href=""https://github.com/datastax/spark-cassandra-connector/b
 ",<cassandra><cassandra-3.0>,"<p>The DROP KEYSPACE command drops the keyspace and all objects that are part of that keyspace: data, tables/colum families, user defined types, indexes.</p>
 
 <p>Before the actual drop,  snapshot of the keyspace is taken. This can be enabled/disabled using auto_snapshot parameter in cassandra.yaml. Default value for this parameter is true.</p>
-"
+",['auto_snapshot']
 49653634,49678555,2018-04-04 14:27:03,Can username and password be passed in connection url for cassandra,"<p>I want to ask if we can pass username and password in database connection url
 Example:</p>
 
@@ -5973,7 +5973,7 @@ And no, the documentation on datastax is not helping me out.</p>
   <p>You can specify a client certificate to authenticate the driver with
   <em>SSLClientCert</em>, <em>SSLClientCertType</em>, <em>SSLClientCertSubject</em>, and <em>SSLClientCertPassword</em>.</p>
 </blockquote>
-"
+",['authenticator']
 49720493,49724461,2018-04-08 17:09:58,Cassandra: how to define a table with auto uuid key?,"<p>I know that cqlsh has uuid() function I can use doing INSERT using cqlsh. But I want to do INSERTs (or creating data from app with driver) without generating uuid on client side.</p>
 ",<cassandra>,"<p>You can use uuid() in your queries outside of cqlsh which would generate them on the coordinator. You dont need to specify them, ie:</p>
 
@@ -5985,7 +5985,7 @@ And no, the documentation on datastax is not helping me out.</p>
 <p>That said it can actually be better to do them on client side. If you do them client side your inserts are idempotent. If you have the function providing the key to be generated on coordinator you cannot retry it on a different coordinator if there are write timeouts. Write timeouts may or may not have been applied so its better if you can just retry.</p>
 
 <p>Theres no concern of collisions by the way. Particularly if you use type 1 uuid's, its impossible for them to collide. Even with >10,000 a millisecond a host (which is the precision of timeuuids, since its number of 100 nanoseconds since creation of Gregorian calendar), most libraries are monotonically increasing and will just progress into future milliseconds ensuring you will never have duplicates.</p>
-"
+",['precision']
 49747222,49767192,2018-04-10 06:54:46,Possibility of using 2 different snitches in the Multiple Data Centers cluster in cassandra,"<p>We have a multiple data centers cluster spanning across our own network and AWS.</p>
 
 <p>We are currently using GossipingPropertFileSnitch snitch across our network.</p>
@@ -5996,7 +5996,7 @@ And no, the documentation on datastax is not helping me out.</p>
 <p>Ec2MultiRegionSnitch gets this information free for you. Its rack and DC aware. But bad part about it is that the discovery of the nodes mandates public ip/internet and then future communications happen through private ips.</p>
 
 <p>In short GossipingPropertyFileSnitch continue to work great.</p>
-"
+","['rack', 'dc']"
 49749573,49767856,2018-04-10 09:04:27,Cassandra Partition vs NoSql Partition,"<p>I've understood difference b/w Cassandra Partition key, Composite key, Clustering key. But not finding enough information to understand how partition is handled in cassandra.<br/>
 In cassandra, range of partition keys are stored on a node like a partition/shard. Is my understanding is correct or not..?<br/>
 Is each partition key has different file(at the system level) in DB..? If so, won't the reads be slower..?<br/>
@@ -6006,7 +6006,7 @@ If each partition key is not having different file in DB. How it's handled..?</p
 <p>At OS level, the data is stored in sstables files. A partition can be spread across many sstables. That's why you also need compaction, which is the process of consolidating those sstables, so your partitions won't be spread across a lot of sstables. Reducing the number of sstables a partitions is spread across, will also improve read time. It's worth noting that sstables are immutable.</p>
 
 <p>I suggest reading <a href=""https://docs.datastax.com/en/cassandra/3.0/cassandra/dml/dmlDatabaseInternalsTOC.html"" rel=""nofollow noreferrer"">this</a>, especially ""How Cassandra reads and writes data"".</p>
-"
+",['partitioner']
 50224203,50225546,2018-05-08 00:35:32,Configure cassandra 3.11.2 to accept remote connection on ec2,"<p>Hey guys i tried many of the solutions posted on different sites and stackoverflow too, but none of them worked for me.
 I have eximented with the following cassandra.yaml paramters-</p>
 
@@ -6034,7 +6034,7 @@ Error: while scanning a simple key; could not found expected ':'; in 'reader', l
 </code></pre>
 
 <p>After fixing the "":"" error in cassandra.yaml file, Cassandra came up smoothly. </p>
-"
+","['listen_address', 'rpc_address']"
 50521935,50522478,2018-05-25 05:14:59,How to recover data deleted using truncate in Cassandra,"<p>I have accidentally truncated a table in Cassandra. I would like to know whether there is any tool available to restore data in it. Any help would be appreciated. Thanks.</p>
 ",<cassandra><restore><truncate><cassandra-3.0>,"<blockquote>
 <p>auto_snapshot  (Default: true)</p>
@@ -6072,7 +6072,7 @@ set auto_snapshot to false, data loss occurs on truncation or drop.</p>
 ./data1/demokeyspace/demo-0d1a38b05fe211e8875d13cbb58d64f2/snapshots/truncated-1527228644868-demo/mc-1-big-Statistics.db
 </code></pre>
 <p>Simply copy those files back. But keep in mind that you need to do this on all nodes and run <code>nodetool refresh demokeyspace demo</code> afterwards to reread the tables (of course with your keyspace and columnfamily).</p>
-"
+",['auto_snapshot']
 50923469,50933324,2018-06-19 08:04:27,uneven data size on cassandra nodes,"<p>I am struggling to understand why my Cassandra nodes have uneven data size.</p>
 
 <p>I have a cluster of three nodes. According to <code>nodetool ring</code>, each node owns 33.33%. Still disk space usages are uneven.</p>
@@ -6122,7 +6122,7 @@ nodetool status to get meaningful ownship information.</p>
 </blockquote>
 <p>Because you only have two racks(RAC1 and RAC2), you are placing node 1 and node 3's replicas in node 2, which is why it is bigger.</p>
 <p><a href=""https://docs.datastax.com/en/cassandra/3.0/cassandra/architecture/archDataDistributeReplication.html"" rel=""nofollow noreferrer"">https://docs.datastax.com/en/cassandra/3.0/cassandra/architecture/archDataDistributeReplication.html</a></p>
-"
+",['rack']
 50992427,50992654,2018-06-22 16:49:16,Alter Keyspace on cassandra 3.11 production cluster to switch to NetworkTopologyStrategy,"<p>I have a cassandra 3.11 production cluster with 15 nodes. Each node has ~500GB total with replication factor 3. Unfortunately the cluster is setup with Replication 'SimpleStrategy'. I am switching it to 'NetworkTopologyStrategy'. I am looking to understand the caveats of doing so on a production cluster. What should I expect?</p>
 ",<cassandra><cassandra-3.0>,"<p>Switching from m<code>SimpleStrategy</code> to <code>NetworkTopologyStrategy</code> in a single data center configuration is very simple.  The only caveat of which I would warn, is to make sure you spell the data center name correctly.  Failure to do so will cause operations to fail.</p>
 
@@ -6166,7 +6166,7 @@ nodetool status to get meaningful ownship information.</p>
 </blockquote>
 
 <p>Correct.</p>
-"
+",['rack']
 51143313,51213411,2018-07-02 20:27:24,Cassandra data persistence with and without flushing the node,"<p>Does Cassandra not persist the tables to disk if I don't do <code>nodetool flush</code>
 I created the table and keyspace using CQL but I only saw the *-data.db file when I did a flush.
 Without it, the data will be lost?</p>
@@ -6175,7 +6175,7 @@ Without it, the data will be lost?</p>
 <p>Cassandra will flush the memtable from RAM and write it to an SSTable on disk when its data footprint exceeds the memtable_cleanup_threshold. Only when this happens will the commitlog be cleared. Nodetool flush converts all memtables to SSTables, even if the memtable_cleanup_threshold is not met.</p>
 
 <p>So the answer is no, your data will not be lost. Eventually the memtable size will meet the threshold, and be written to an SSTable on the disk. </p>
-"
+",['memtable_cleanup_threshold']
 51479124,51612990,2018-07-23 12:43:17,Extending Cassandra cluster with datacenter in China (CGF),"<p>I need to extend my cluster with a new datacenter to be present in China mainland, behind the Great Firewall. Currently I have datacenters in the US and Europe - so the cluster already matches to the requirements of the <a href=""https://www.datastax.com/dev/blog/multi-datacenter-replication"" rel=""noreferrer"">Geographical Location Scenario</a>.</p>
 
 <p>At this point I have the chinese infrastructure ready for Cassandra, but the network statistics from the past few days are bit troublesome and I am a bit afraid: <strong><em>if and how this can effect my current cluster</em></strong> and will be the new datacenter functional at all?</p>
@@ -6224,7 +6224,7 @@ Without it, the data will be lost?</p>
 <p>I would recommend against the solution of using sstableloader for it functions very similar as rebuild does and requires a snapshot to operate. If network is what is causing the slow speed, then changing the way of streaming is not going to make much difference.</p>
 
 <p>In my opinion, the first thing to do would be to measure where the bottleneck is for your system. If the slow network is really the bottleneck, one could add more nodes to stream from more sources at the same time but ultimately you will still be hampered by the slow network connection.</p>
-"
+","['phi_convict_threshold', 'dc']"
 51793195,51800521,2018-08-10 19:45:46,Data Partitioning and Replication on Cassandra cluster,"<p>I have a 3 node Cassandra cluster with RF=3. Now when I do <code>nodetool status</code> I get the <strong>owns</strong> for each node in the cluster as 100%.</p>
 
 <p>But when I have 5 nodes in the cluster wit RF=3. The <strong>owns</strong> is 60%(approx as shown in image below).</p>
@@ -6274,7 +6274,7 @@ Now we have a 5 node cluster and RF is 3. </p>
 </blockquote>
 
 <p>Actually, the distributed hash with Murmur3 partitioner will evenly distribute the token ranges, <strong><em>not</em></strong> the data.  That's an important distinction.  If you wrote all of your data to a single partition, I guarantee that you would <em>not</em> get even distribution of data.</p>
-"
+",['partitioner']
 52266171,52266457,2018-09-10 22:11:24,Golang gocql cannot connect to Cassandra (using Docker),"<p>I am trying to setup and connect to a Cassandra single node instance using docker and Golang and it is not working.</p>
 
 <p>The closest information I could find to addressing connection issues between the golang <code>gocql</code> package and Cassandra is available here: <a href=""https://stackoverflow.com/questions/29121904/cassandra-cqlsh-connection-refused"">Cassandra cqlsh - connection refused</a>, however there are many different upvote answers with no clear indication of which is preferred. It is also a protected question (no ""me toos""), so a lot of community members seem to be having trouble with this.</p>
@@ -6413,7 +6413,7 @@ dial tcp [::1]:9042: connect: cannot assign requested address
 <blockquote>
   <p>The default value is auto, which will set the listen_address option in cassandra.yaml to the IP address of the container as it starts. This default should work in most use cases.</p>
 </blockquote>
-"
+",['listen_address']
 52402907,52435581,2018-09-19 09:45:00,Cassandra 2.1 changing snitch from EC2Snitch to GossipingPropertyFileSnitch,"<p>Currently we have used EC2Snitch using two AZs in a single AWS region. The goal was to provide resiliency even when one AZ is not available. Most data are replicated with RF=2, so each AZ gets a copy based on Ec2Snitch.</p>
 
 <p>Now we have come to a conclusion to move to GossipingPropertyFileSnitch. Reason primarily is that we have realized that one AZ going down is a remote occurrence and even if it happens, there are other systems in our stack that don't support this; so eventually whole app goes down if that happens.</p>
@@ -6443,7 +6443,7 @@ rack=2
 </code></pre>
 
 <p>On a side note you need to explore why repairs are failing. Unfortunately they are very important for cluster health. </p>
-"
+","['rack', 'dc']"
 54222010,54222176,2019-01-16 17:07:16,On Cassandra how to enable LDAP authentication,"<p>I have a Cassandra cluster running on Ubuntu. I would like to enable authentication so that not everyone will have access to the Cassandra database and run queries.</p>
 
 <p>Enabling simple authentication is available at <a href=""https://docs.datastax.com/en/cassandra/3.0/cassandra/configuration/secureConfigNativeAuth.html"" rel=""nofollow noreferrer"">https://docs.datastax.com/en/cassandra/3.0/cassandra/configuration/secureConfigNativeAuth.html</a></p>
@@ -6461,7 +6461,7 @@ rack=2
 </ul>
 
 <p>Later edit: since you need LDAP autentication you can use the one created by Instaclustr. Details - <a href=""https://www.instaclustr.com/apache-cassandra-ldap-authentication/"" rel=""nofollow noreferrer"">Apache Cassandra LDAP Authentication</a> and the <a href=""https://github.com/instaclustr/cassandra-ldap"" rel=""nofollow noreferrer"">source code</a>.</p>
-"
+",['authenticator']
 54637593,54673425,2019-02-11 19:18:14,What should I try when cassandra appears to be running and listening but cqlsh can't connect?,"<p>I'm new to Cassandra and was trying it out. Despite Cassandra apparently running and listening (according to <code>lsof</code>) I can't connect to it. <code>sudo systemctl status cassandr</code> also reports <code>active (running)</code>.</p>
 
 <pre><code>$ sudo lsof -Pnl +M -i4 
@@ -6507,7 +6507,7 @@ Connection error: ('Unable to connect to any servers', {'127.0.0.1': error(111, 
   start_native_transport = true;
 };
 </code></pre>
-"
+",['start_native_transport']
 54787579,54800860,2019-02-20 13:34:03,ReadTimeout: Error from server: code=1200 [Coordinator node timed out waiting for replica nodes,"<p>I am getting below error on,</p>
 
 <pre><code>ReadTimeout: Error from server: code=1200 [Coordinator node timed out waiting for replica nodes' responses] message=""Operation timed out - received only 0 responses."" info={'received_responses': 0, 'required_responses': 1, 'consistency': 'ONE'}
@@ -6559,7 +6559,7 @@ slow_query_log_timeout_in_ms: 5000
 </code></pre>
 
 <p>Everything looks ok.</p>
-"
+",['auto_snapshot']
 54938850,55132608,2019-03-01 06:06:52,Configuration for cassandra with rac and vnodes in single data center,"<p>I was wondering which configuration will be best suited for even distribution of data among nodes.</p>
 
 <ol>
@@ -6588,7 +6588,7 @@ Replication factor 3 and Read / Write on Quorum</li>
 <p>For example, with RF=3 and 3 racks and queries at <code>QUORUM</code>, you can sustain the failure of a single rack. Whereas, with RF=3 and 2 racks at <code>QUORUM</code>, there is no guarantee that 2 replicas will still be available in the case of a rack failure.</p>
 
 <p>Racks are for informing Cassandra about fault domains. If your running in your own data center, as the name implies, racks should be assigned based on the rack the node is located in. If you're running in the cloud, the best option is to map racks to AWS <em>availability zones</em> (or whatever is equivalent for your provider).</p>
-"
+",['rack']
 54983225,54985822,2019-03-04 12:24:37,Group by on Primary Partition,"<p>I am not able to perform Group by on a primary partition. I am using Cassandra 3.10. When I group by I get the following error.
 <code>InvalidReqeust: Error from server: code=2200 [Invalid query] message=""Group by currently only support groups of columns following their declared order in the Primary Key</code>. My column is a primary key even still I am facing the problem.</p>
 
@@ -6636,7 +6636,7 @@ with clustering order by (code DESC, uitime DESC)
 </code></pre>
 
 <p>Perhaps the pseudo-schema you provided differs from the actual one. Can you provide output of <code>describe table xxxxx</code> in your question?</p>
-"
+",['partitioner']
 55243714,55445088,2019-03-19 14:46:27,Cassandra-stress : how to install and set it up outside cassandra cluster,"<p>I am about to use simple cassnadra cluster (3 nodes, x.x.x.104-106). I'm using CentOS7, so i used datastax repository, Cassandra 3.0. 
 I read on forum, it is better to install the cassandra-stress outside the cluster, otherwise it consumes CPU of the node.</p>
 
@@ -6669,7 +6669,7 @@ thrift=9160 jmx=7199
 </code></pre>
 
 <p>Note! JMX communication is not secured</p>
-"
+",['rpc_address']
 56802034,56829845,2019-06-28 06:38:34,restore with AWS EBS' snapshots on separate cluster,"<p>I have a cluster with 3 nodes - say cluster1 on AWS EC2 instances. The cluster is up and running, took snapshot of the keyspace's volume. </p>
 
 <p>Now I want to restore few tables/keyspaces from the snapshot volumes, so I created another cluster say cluster2 and attached the snapshot volumes on to the new cluster's ec2 nodes (same number of nodes). Cluster2 is not starting bcz the system keyspace in the snapshot taken was having cluster name as cluster1 and the cluster on which it is being restored is cluster2. How do I do a restore in this case? I do not want to do any modifications to the existing cluster.</p>
@@ -6705,7 +6705,7 @@ thrift=9160 jmx=7199
 </ol>
 
 <p>At this point you will have 2 independent clusters, with different name.</p>
-"
+",['cluster_name']
 57241604,57242883,2019-07-28 13:58:33,Cassandra Says Listening on Port 9042 But Couldn't Connect It,"<p>I've running cassandra on my local machine. </p>
 
 <p>I've starting it <code>sudo service cassandra start</code>. And then check logs under <code>var/log/cassandra/system-log</code> and it says:</p>
@@ -6737,7 +6737,7 @@ INFO  [OptionalTasks:1] 2019-07-28 13:13:27,298 CassandraRoleManager.java:339 - 
 <li>Set listen_address and broadcast_rpc_address to local ip (get ip address from ifconfig).</li>
 <li>Restart Cassandra.</li>
 </ol>
-"
+","['listen_address', 'broadcast_rpc_address']"
 57691436,57698599,2019-08-28 11:32:45,Datastax Java driver 4.x : How to get cluster name?,"<p>After upgrading java driver for cassandra from 3.7 to 4.0 (or above) - I am unable to resolve the cluster name.</p>
 
 <p>I need the name of the cassandra cluster to which the my application is connected using java driver. Earlier it was available as ""Cluster.getMetadata().getClusterName()"". But after upgrading to datastax-driver-core-4.0 or above- I am unable to resolve the Cluster name from CqlSession.getMetadata()..</p>
@@ -6751,7 +6751,7 @@ ResultSet resultSet = session.execute(statement);
 Row row = resultSet.one();
 System.out.println(row.getString(""cluster_name""));
 </code></pre>
-"
+",['cluster_name']
 58406145,58409061,2019-10-16 05:14:11,Migrating data from a single node cassandra cluster to another single node cassandra cluster,"<p>I have a Single Node Cassandra Cluster which has around 44gb of data on it(/var/lib/cassandra/data/my_keyspace). The current storage is 1 tb and I need to migrate all the data to another VM which will have the same setup(single node cluster). My data-node has data being pushed to it every second so I can't afford any downtime(Some sensors are pushing time-series data).</p>
 
 <pre><code>Keyspace :- CREATE KEYSPACE my_keysopace WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}  AND durable_writes = true;
@@ -6825,7 +6825,7 @@ Please let me know if I am missing anything here </p>
 <ol start=""5"">
 <li>(Missing step) You'll have to modify the new node to see itself as a seed once you've decomissioned the old node or it wont be able to re-start.</li>
 </ol>
-"
+",['listen_address']
 58409127,58409830,2019-10-16 08:39:20,Cassandra: Shipping Disk to New DC in order to sync 50TB of data,"<p>We're adding a new datacenter to our Cassandra cluster. Currently, we have a 15-node DC with RF=3 resulting in about 50TB~ of data.</p>
 
 <p>We are adding another datacenter in a different country and we want both data centers to contain all the data. Obviously, synchronizing 50TB of data across the internet will take a gargantuan amount of time.</p>
@@ -6864,7 +6864,7 @@ Or any other tips?</p>
 <ol start=""8"">
 <li>Run a full repair on each node in the new dc. </li>
 </ol>
-"
+",['initial_token']
 58466825,58492704,2019-10-19 18:32:07,How do I connect to a Cassandra VM,"<p>The following code works if Cassandra and the code are on the same machine:</p>
 
 <pre><code>using System;
@@ -6998,7 +6998,7 @@ rpc_address: 192.168.0.18
 <p><strong>tl;dr;</strong></p>
 
 <p>If you intend to connect to your cluster/node remotely, then you <em>cannot</em> use the default configurations which bind Cassandra to the home IP (127.0.0.1/localhost).  And that includes all <code>_address</code> settings, as well as your <code>seeds</code> list.</p>
-"
+","['listen_address', 'rpc_address']"
 59617657,59618346,2020-01-06 19:11:28,EACH_QUORUM VS QUORUM,"<p>This is a screenshot from the consistency level table according <a href=""https://docs.datastax.com/en/dse/5.1/cql/cql/cql_reference/cqlsh_commands/cqlshConsistency.html"" rel=""nofollow noreferrer"">to Datastax documentation</a>:</p>
 
 <p><a href=""https://i.stack.imgur.com/6WxoS.png"" rel=""nofollow noreferrer""><img src=""https://i.stack.imgur.com/6WxoS.png"" alt=""enter image description here""></a></p>
@@ -7036,7 +7036,7 @@ rpc_address: 192.168.0.18
 <p>With QUORUM_EACH, 5 nodes would need to respond (Quorum of DC1 = 4/2+1 = 3, Quorum of DC2 = 3/2+1 = 2 ==> total = 5). With this scenario, you're forcing cassandra to return data from both DCs - and a QUORUM level from each DC which should give you good results.</p>
 
 <p>Again, I'm trying in my head to determine where the additional ""failures"" could come with QUORUM v.s. QUORUM_EACH and I can't at the top of my head see it. It would seem if anything, QUORUM_EACH with an odd node count, is less flexible in unavailable nodes as a quorum in each DC must respond v.s. any quorum number of nodes from any DC. I can see where QUORUM may give you undesirable results though (explained above).</p>
-"
+",['dc']
 59671310,59965580,2020-01-09 20:01:03,Databricks Spark Cassandra connectivity throwing exception: com.datastax.driver.core.exceptions.NoHostAvailableException,"<p>I have installed the Cassandra DB in Azure Virtual Machine and want to perform read/write operation through the Azure Databricks. I am going through the Databricks offcial <a href=""https://docs.databricks.com/data/data-sources/cassandra.html"" rel=""nofollow noreferrer"">documentation</a> which does not help me in configuration.<br>
 I am sharing below my code cum configurations details:</p>
 
@@ -7112,7 +7112,7 @@ cassandra version: 3.11.4
 
 <pre><code>listen_address: **localhost**
 </code></pre>
-"
+",['broadcast_rpc_address']
 59830846,59834889,2020-01-20 21:06:33,Cassandra Virtual Nodes,"<p>Although it is asked many times and answered many times, I did not find a good answer anyway.
 Neither in forums nor in cassandra docs.</p>
 
@@ -7138,7 +7138,7 @@ Will they, basically, appear as additional ""bicycle spokes"" randomly spread th
 <p><strong>Ans 2:-</strong> Yes, when you are adding or removing the nodes the tokens will distribute again in the cluster based on vnodes configurations.</p>
 
 <p>you may refer for more details are here <a href=""https://docs.datastax.com/en/ddac/doc/datastax_enterprise/dbArch/archDataDistributeVnodesUsing.html"" rel=""nofollow noreferrer"">https://docs.datastax.com/en/ddac/doc/datastax_enterprise/dbArch/archDataDistributeVnodesUsing.html</a></p>
-"
+",['num_tokens']
 59961978,59965495,2020-01-29 07:03:40,unable to access cassandra from azure data bricks,"<p>whenever i am trying to access my cassandra cluster from azure databricks getting below error,</p>
 
 <p>java.io.IOException: Failed to open native connection to Cassandra at {xx.xx.xx.xx}:9142</p>
@@ -7156,7 +7156,7 @@ these settings must work for you -</p>
 <p>broadcast_rpc_address: &lt;<strong>public ip</strong> or <strong>hostname.westeurope.cloudapp.azure.com</strong>></p>
 
 <p>listen_address: <strong>localhost</strong> </p>
-"
+",['broadcast_rpc_address']
 60635798,60638898,2020-03-11 12:13:39,Issues with new node bootstrap,"<p>We are using Cassandra 3.11.2 and when trying to bootstrap a new node, the streaming takes a lot of time. The cluster is a three node one, and we are in the process of adding the fourth one. The data available on the other three nodes is close to 190GB, and the instance size is 5 core, 5GB running on spinning drives.</p>
 
 <p><code>nodetool netstats</code> on the new node says streaming files, and of 106 files, 15 received from node A.  But same <code>netstats</code> on node A claims all 106 files have been sent.</p>
@@ -7196,7 +7196,7 @@ The new node is started with auto_bootstrap flag set to true.</p>
 <p>You could also start the node without bootstrapping enabled, and run a <code>nodetool repair</code> once it comes up.  This has some drawbacks in that the new node will still try to serve client requests, regardless of whether or not it actually has the data.  But it would let you at least get the node joined, and stream the data over on a more gradual basis.</p>
 
 <p>That's why <strong>upgrading to 3.11.4</strong> is probably your best option.  Then you can restart the node when the streams fail, it'll pick up where it left off, and it won't take client requests until data streaming completes.</p>
-"
+",['rack']
 61178735,61182424,2020-04-12 21:57:20,What is the difference between Consistent Hashing and Partitioner in Cassandra,"<p>I'm new to Cassandra, I got confused between <code>consistent hashing</code> and <code>partitioner</code>.
 Are they both same ?</p>
 <p>Please find the definitions from Datastax documentation:</p>
@@ -7208,7 +7208,7 @@ Are they both same ?</p>
 
 <p>I think you have already got the definition that is correct but for other ways you can understand the things from below.
 <a href=""https://dzone.com/articles/introduction-apache-cassandras"" rel=""nofollow noreferrer"">https://dzone.com/articles/introduction-apache-cassandras</a>. There is good explanation about both. </p>
-"
+",['partitioner']
 62086888,62103361,2020-05-29 13:16:13,How should I set the replication factor in Cassandra to account for node failure?,"<p>Lets say we have a cassandra deployment with a replication factor of 2. By this I mean that we can tolerate the total loss of one node of persistent storage without overall data loss. I understand this to mean that each of the values are stored on at least two different nodes at any given time. Therefore the total storage required is at least the total data of the values x 2. Ie, if we need to store 100TB in the cluster, we would need at least 200TB persistent storage across the nodes. </p>
 
 <p>However, as the node count increases, so does the likelyhood of more than 1 node failing. Therefore, do we need to increase the replication factor as the number of nodes increases?</p>
@@ -7236,7 +7236,7 @@ Are they both same ?</p>
 <p>Typically, it's recommended to use replication factor 3, and if you're planning big deployment, definitely use rack-aware data placement - but you should be careful, so number of racks should match RF (in cloud deployments, usually the rack is mapped to the availability zone). </p>
 
 <p>Availability is also depends on your business requirements - in simplest case, if you use  consistency levels <code>ONE</code> or <code>LOCAL_ONE</code>, your data is available even only one replica is available, but if your business logic requires stronger consistency, you need to have more replicas available. And replication factor also affects the consistency levels - if you use RF=2, and require CL=QUORUM, you can't tolerate single node failure, while it's possible to achieve that CL with RF=3 and one node failed.</p>
-"
+",['rack']
 63068006,63068254,2020-07-24 06:24:30,Cassandra configuration config by cqlsh,"<p>Cassandra version: <code>3.9</code>, CQLSH version: <code>5.0.1</code></p>
 <p>Can I query Cassandra configuration (<code>cassandra.yaml</code>) using <code>cqlsh</code>?</p>
 ",<cassandra><cql><cassandra-3.0><cqlsh>,"<p>No, it's not possible in your version.  It's possible only starting with Cassandra 4.0 that has so-called virtual tables, and there is a special table for configurations: <code>system_views.settings</code>:</p>
@@ -7252,14 +7252,14 @@ Are they both same ?</p>
 </code></pre>
 <p>You can find more information on the virtual tables in the <a href=""https://thelastpickle.com/blog/2019/03/08/virtual-tables-in-cassandra-4_0.html"" rel=""nofollow noreferrer"">following blog post from TLP</a>.</p>
 <p>In the meantime, you can access configuration parameters via JMX.</p>
-"
+",['trickle_fsync']
 63072179,63072663,2020-07-24 10:56:15,"Adding a new cassandra node to an existing cluster, with a different snitch","<p>I have a cassandra cluster with 5 nodes that is using EC2 snitch but for the new node I want to add I want to use GossipingPropertyFileSnitch. Is it okay to have this node with a different snitch, will it cause any impact to the schema or schema versions?</p>
 ",<database><cassandra><datastax>,"<p>All nodes in a cluster should use the same snitch since it is critical in determining the cluster topology and position of the replicas (to avoid them all being on the same rack for example.).</p>
 <p>Just as an experiment, I changed a node in a 3 node sandbox cluster to use a different snitch and while it did start up, when running nodetool status on the 2 nodes with different snitches, they reported very different topologies - as you would know, this is not a good thing at all.</p>
 <p>If you wish to move the whole cluster to GossipingPropertyFileSnitch, then there is a documented process on how to change the snitch of a cluster:
 <a href=""https://docs.datastax.com/en/dse/6.8/dse-admin/datastax_enterprise/operations/opsSwitchSnitch.html"" rel=""nofollow noreferrer"">https://docs.datastax.com/en/dse/6.8/dse-admin/datastax_enterprise/operations/opsSwitchSnitch.html</a></p>
 <p>You will find that there are versions of that page for different versions of DSE. You would change the snitch first via the process, then add the additional node.</p>
-"
+",['rack']
 63565125,63566831,2020-08-24 16:34:47,"Writing JSON data into Cassandra using python client, issue with primary key choice","<p>So I want to write data, which is coded as a JSON string into a Cassandra table. I did the following steps:</p>
 <ul>
 <li>Create a Cassandra table containing columns with all the attributes of my JSON string. Here is the cql for that:</li>
@@ -7346,12 +7346,12 @@ select count(*) from on_equipment;
 
 4
 </code></pre>
-"
+",['precision']
 67353944,67354375,2021-05-02 07:23:35,Will the Write-Ahead-Log become the bottleneck of Cassandra?,"<p>In a Cassandra database, a write needs to be logged in the Write Ahead Log first and then added to the memtable in memory. Since the Write Ahead Log is on disk, although it performs sequential writes（i.e., append only）, will it still be much slower than memory access, thus become the performance bottleneck for the writes？</p>
 <p>If I understand it correctly, Cassandra supports the mechanism to store the Write Ahead Log in OS cache, and then flush it to disk every pre-configured amount of time(say 10 seconds). However, does it mean the data changes made within this 10 seconds could be all lost if the machine crashes?</p>
 ",<cassandra>,"<p>You can control if the sync of commit log using the <a href=""https://cassandra.apache.org/doc/latest/configuration/cass_yaml_file.html#commitlog-sync"" rel=""nofollow noreferrer"">commitlog-sync</a> configuration.  By default it's <code>periodic</code>, and synced to disk every 10 seconds (controlled by <code>commitlog_sync_period_in_ms</code> setting).</p>
 <p>And yes, if you lose the power there is a risk that data in the commit log is lost.  But Cassandra relies on the fact that you have multiple replicas, and if you did setup correctly, each replica should be in separate rack (at least, better if you have additional data centers) with separate power, etc.</p>
-"
+",['rack']
 67614729,67619564,2021-05-20 05:59:08,How cassandra handles new node ( how tokens are redistributed)?,"<p>I recently started exploring Cassandra for a new project. Here is my understanding of Cassandra as of now (based on numerous blogs available online)</p>
 <ol>
 <li>Cassandra (C*) is AP (CAP theorem), i.e. it is highly available and partition tolerant</li>
@@ -7434,7 +7434,7 @@ You can go through each field in below protocol data</p>
 </code></pre>
 <p>Gossip is the broadcast protocol spread data across the cluster. No one is a master in cassandra cluster, peers spread data among themselves which helps them to maintain latest information. Nodes communicates with each other randomly using gossip protocol (there is some criteria in this randomness).  Gossip spreads node metadata only and not the client data.</p>
 <p>Hope this clears some doubts.</p>
-"
+",['initial_token']
 68536805,68537872,2021-07-26 22:04:28,What are the differences between wide partition and data skew in Cassandra?,"<p>As I understood both are telling data amount in a specific partition should not be more than other partitions. So we should choose proper partition key(s) to compensate for these problems. But really what are the differences between these two idioms?</p>
 ",<database><cassandra><nosql>,"<p>While they can occur for the same reasons (Data Model and Partition Key Cardinality), the data imbalance between nodes can occur for others reasons.</p>
 <p>If a partition key is not selective enough, there can be situations where the amount of data partition grows, with a maximum recommended amount of 100 Mb per partition, but ideally not more than even 10 Mb.</p>
@@ -7448,7 +7448,7 @@ For example (to demonstrate the result, not that you would do this.)</p>
 </ul>
 <p>With an RF of 3 and 100 GB of Data, each rack will hold a replica. Nodes in rack 1 and 2 will roughly be 20Gb each, rack 3 will be 50Gb each (roughly).</p>
 <p>This is why the normal advice when using racks is you will increase the node count by 3 per DC as it expands.</p>
-"
+","['partitioner', 'allocate_tokens_for_local_replication_factor', 'rack', 'allocate_tokens_for_keyspace']"
 68824710,68833675,2021-08-17 22:29:42,Configuring cassandra-rackdc and cassandra-topology,"<p>I am configuring 6 nodes Cassandra cluster on AWS EC2,3 nodes in region and 3nodes in other region:</p>
 <p>eu-central-1</p>
 <ul>
@@ -7481,7 +7481,7 @@ For example (to demonstrate the result, not that you would do this.)</p>
      'eu-central-1':'3'};
 </code></pre>
 <p>The main point to consider, is that your data center names <em>must</em> match between the keyspace definition and the entries in the <code>cassandra-rackdc.properties</code> files.</p>
-"
+",['rack']
 68839795,71971999,2021-08-18 21:57:57,Error to write dataframe in Cassandra table on Amazon Keyspaces,"<p>I'm trying to write a dataframe on AWS (Keyspace), but I'm getting the following messages below:</p>
 <p>Stack:</p>
 <pre><code>dfExploded.write.cassandraFormat(table = &quot;table&quot;, keyspace = &quot;hub&quot;).mode(SaveMode.Append).save()
@@ -7521,7 +7521,7 @@ java.lang.AssertionError: assertion failed: There are no contact points in the g
 <p>Connection by cqlsh everything ok, but in spark got this error</p>
 ",<scala><apache-spark><cassandra><spark-cassandra-connector>,"<p>To read and write data between Keyspaces and Apache Spark by using the open-source Spark Cassandra Connector all you have to do is update the partitioner for your Keyspaces account.</p>
 <p>Docs: <a href=""https://docs.aws.amazon.com/keyspaces/latest/devguide/spark-integrating.html"" rel=""nofollow noreferrer"">https://docs.aws.amazon.com/keyspaces/latest/devguide/spark-integrating.html</a></p>
-"
+",['partitioner']
 68979039,68979265,2021-08-30 04:47:19,Elassandra replication information and rack configuration,"<p>I recently started working with an Elassandra cluster with two data centers which have been configured using NetworkTopologyStrategy.</p>
 <p>Cluster details : <code>Elassandra 6.2.3.15 = Elasticsearch 6.2.3 + Cassandra 3.11.4</code></p>
 <pre><code>Datacenter: DC1
@@ -7565,7 +7565,7 @@ wrong? If so, is there a standard guideline to follow?</li>
 <p>The logical Cassandra racks are for additional redundancy mechanism. If you have C* nodes deployed in different (a) physical racks, or (b) public cloud availability zones, Cassandra will distribute the replicas to separate racks so each rack has a full copy of the data. With a replication factor of 3 in the DC, if a rack goes down for whatever reason then there's still full copies of the data in the remaining 2 racks and read/write requests with a consistency of <code>LOCAL_QUORUM</code> (or lower) will not be affected.</p>
 <p>I've explained this in a bit more detail in this post -- <a href=""https://community.datastax.com/questions/1128/"" rel=""nofollow noreferrer"">https://community.datastax.com/questions/1128/</a>.</p>
 <p>If you're new to Cassandra, we recommend <a href=""https://www.datastax.com/dev"" rel=""nofollow noreferrer"">https://www.datastax.com/dev</a> which has links to short hands-on tutorials where you can quickly learn the basics of Cassandra -- all free. This tutorial is a good place to start -- <a href=""https://www.datastax.com/try-it-out"" rel=""nofollow noreferrer"">https://www.datastax.com/try-it-out</a>. Cheers!</p>
-"
+",['rack']
 71276247,71306851,2022-02-26 11:27:54,How does peer to peer architecture work in Cassandra?,"<p>How the peer-to-peer Cassandra architecture really works ? I mean :</p>
 <p>When the request hits the Cluster, it must hit some machine based on an IP, right ?</p>
 <p>So which machine it will hit first ? : one of the nodes, or something in the Cluster who is responsible to balance and redirect the request to the right node ?</p>
@@ -7594,7 +7594,7 @@ wrong? If so, is there a standard guideline to follow?</li>
 <p>Finally, all nodes are equal in Cassandra. There is no active-passive, no leader-follower, no primary-secondary and this makes Cassandra a truly high availability (HA) cluster with no single point-of-failure. Any node can do the work of any other node and the load is distributed equally to all nodes by design.</p>
 <p>If you're new to Cassandra, I recommend having a look at <a href=""https://www.datastax.com/dev"" rel=""nofollow noreferrer"">datastax.com/dev</a> which has lots of free hands-on interactive learning resources. In particular, the <a href=""https://www.datastax.com/learn/cassandra-fundamentals"" rel=""nofollow noreferrer"">Cassandra Fundamentals</a> learning series lets you learn the basic concepts quickly.</p>
 <p>For what it's worth, you can also use the <a href=""https://stargate.io/"" rel=""nofollow noreferrer"">Stargate.io</a> data platform. It allows you to connect to a Cassandra cluster using APIs you're already familiar with. It is fully open-source so it's free to use. Here are links to the Stargate tutorials on datastax.com/dev: <a href=""https://www.datastax.com/dev/rest"" rel=""nofollow noreferrer"">REST API</a>, <a href=""https://www.datastax.com/dev/documents-api"" rel=""nofollow noreferrer"">Document API</a>, <a href=""https://www.datastax.com/dev/graphql"" rel=""nofollow noreferrer"">GraphQL API</a>, and more recently <a href=""https://www.datastax.com/blog/available-now-grpc-apache-cassandra"" rel=""nofollow noreferrer"">gRPC API</a>. Cheers!</p>
-"
+",['rack']
 71366492,71366792,2022-03-05 22:46:50,How does partition range repair work in Cassandra?,"<ol>
 <li>Will partition range repair (-pr) repairs only the primary token rages a node is responsible for or also the non-primary tokens a node is holding data?</li>
 <li>If only primary tokens, then is it mandatory to run partition range repair on all nodes so that non-primary tokens also get repaired?</li>
@@ -7606,7 +7606,7 @@ wrong? If so, is there a standard guideline to follow?</li>
 <p>Partitioner range repairs (also referred to as &quot;primary range repairs&quot;) are designed to be really efficient since it doesn't repair ranges which have already been repaired on other nodes.</p>
 <p>Jeremiah Jordan explains this in great detail in his blog post <a href=""https://www.datastax.com/blog/repair-cassandra"" rel=""nofollow noreferrer"">Apache Cassandra Maintenance and Repair</a>.</p>
 <p>Patrick McFadin also explains <a href=""https://www.youtube.com/watch?v=5V5rGDTHs20&amp;list=PL2g2h-wyI4SrHMlHBJVe_or_Ryek2THgQ&amp;index=18"" rel=""nofollow noreferrer"">how repairs work and the different types of repairs in this video</a> extracted from the DS210 Cassandra Operations course at <a href=""https://academy.datastax.com/"" rel=""nofollow noreferrer"">DataStax Academy</a>. Cheers!</p>
-"
+",['partitioner']
 72735204,72767435,2022-06-23 18:46:56,How do I find out right data design and right tools/database/query for below requirement,"<p>I have a kind of requirement but not able to figure out how can I solve it. I have datasets in below format</p>
 <pre><code>id, atime, grade
 123, time1, A
@@ -7645,4 +7645,4 @@ I am trying out things but any help is appreciated.</p>
 <li>ElasticSearch: It's great on random access, maybe the greatest. With some kind of filter aggregations, we can have a type of window function. It can handle a large amount of data with sharding. But its query language is hard. I can imagine we can answer the first and second questions with ES, but for now, I can't make a query in my mind. It takes time to find the right solution with it.</li>
 </ul>
 <p>So it seems MongoDB and ElasticSearch can answer our requirements, but there is a lot of 'if's on the way. I think we can't find a straightforward solution with a single tool. Maybe we should choose multiple tools and use techniques like duplicating data to find an optimal solution.</p>
-"
+",['partitioner']

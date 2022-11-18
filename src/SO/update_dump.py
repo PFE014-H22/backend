@@ -10,7 +10,6 @@ sys.path.insert(0, '../config_parameters/cassandra/')
 import fetch_cassandra_parameters
 
 input_path = "../../BD/QueryResults.csv"
-output_path = "../../BD/QueryResults.csv"
 
 param_file_path = "../config_parameters/cassandra/cassandra_parameters.txt"
 
@@ -57,7 +56,7 @@ def get_answers(page_number: int, question_ids: str):
     json_response = response.json()
     return json_response
 
-#itirate through API until we reach the last page
+#iterate through API until we reach the last page
 page_number = 1
 new_questions = []
 while True:
@@ -92,13 +91,12 @@ for question in new_questions[:]:
 print(len(new_questions))
 print(question_ids)
 
-#itirate through answers API until we reach last page
+#iterate through answers API until we reach last page
 if new_questions:
     page_number = 1
     new_answers = []
     while True:
         answers = get_answers(page_number, question_ids)
-        print(answers)
         new_answers.extend(answers["items"])
         print(page_number)
         print(answers["has_more"])
@@ -120,6 +118,7 @@ if new_questions:
             else:
                 # can remove
                 print(params)
+                answer['params'] = params
 
     print(len(new_answers))
 
@@ -129,6 +128,7 @@ for question in new_questions:
     for answer in new_answers:
         if answer['answer_id'] == question['accepted_answer_id']:
             question['answer_body'] = answer['body']
+            question['params'] = answer['params']
             list_to_add.append(question)
 
 print(len(list_to_add))
@@ -144,7 +144,8 @@ for question in list_to_add:
         'Title': question['title'],
         'Body': question['body'],
         'AnswerBody': question['answer_body'],
-        'Tags': question['tags']
+        'Tags': question['tags'],
+        'Params': question['params']
     }
 
     print(to_add['Id'])
@@ -153,7 +154,7 @@ for question in list_to_add:
 
 print(len(df_csv))
 
-df_csv.to_csv(output_path, index=False)
+df_csv.to_csv(input_path, index=False)
 
 # insert new updated timestamp
 exec_str = "INSERT INTO UpdateStamp VALUES(" + str(current_time) + ");"
