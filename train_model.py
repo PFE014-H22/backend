@@ -37,8 +37,6 @@ def train_model(
     print("Reading CSV...")
     param_occurrences = {}
     for row in reader:
-        answer_body = row[6]
-
         raw_data = {}
         raw_data["question_id"] = row[0]
         raw_data["answer_id"] = row[1]
@@ -47,7 +45,7 @@ def train_model(
         raw_data["question_body"] = row[4]
         raw_data["tags"] = [tag.replace('<', '').replace('>', '') for tag in re.findall('\<.*?\>', row[5])]
         raw_data["response_body"] = row[6]
-        raw_data["parameters"] = row[7]
+        raw_data["parameters"] = [param.replace("'", "") for param in re.findall(r"'.*?'", row[7])]
         raw_data["link"] = f"https://stackoverflow.com/a/{raw_data['answer_id']}"
         # ID is used to populate dictionnary
         data_dict[index] = raw_data
