@@ -72,14 +72,14 @@ def search():
         answer = {
             "question_id": question["question_id"],
             "answer_id": question["answer_id"],
-            # "link": answer.get("link", "http://example.com"),
-            # "source": get_data_source(answer.get("link", "")),
             "similarity_score": similarity_score,
             "parameters": question["parameters"],
-            "title": question["title"],
-            "body": question["body"],
-            "answer_body": question["answer_body"],
-            "tags": question["tags"] #add tags from pickle
+            "question_title": question["question_title"],
+            "question_body": question["question_body"],
+            "response_body": question["response_body"],
+            "tags": question["tags"], #add tags from pickle
+            "parameters": question["parameters"],
+            "link": question["link"]
         }
         answers.append(answer)
 

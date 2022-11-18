@@ -38,30 +38,23 @@ def train_model(
     param_occurrences = {}
     for row in reader:
         answer_body = row[6]
-        parameters = find_parameter(answer_body, CASSANDRA_PARAMETER_FILE)
 
-        if parameters is not None:
-            for param in parameters:
-                if param in param_occurrences:
-                    param_occurrences[param] += 1
-                else:
-                    param_occurrences[param] = 1
-
-            raw_data = {}
-            raw_data["question_id"] = row[0]
-            raw_data["answer_id"] = row[1]
-            raw_data["creation_date"] = row[2]
-            raw_data["title"] = row[3]
-            raw_data["body"] = row[4]
-            raw_data["tags"] = [tag.replace('<', '').replace('>', '') for tag in re.findall('\<.*?\>', row[5])]
-            raw_data["answer_body"] = row[6]
-            raw_data["parameters"] = parameters
-            # ID is used to populate dictionnary
-            data_dict[index] = raw_data
-            # Title and Body are combined into a single string.
-            question_text = f'{row[3]} {row[4]}'
-            dataset.append(question_text)
-            index += 1
+        raw_data = {}
+        raw_data["question_id"] = row[0]
+        raw_data["answer_id"] = row[1]
+        raw_data["creation_date"] = row[2]
+        raw_data["question_title"] = row[3]
+        raw_data["question_body"] = row[4]
+        raw_data["tags"] = [tag.replace('<', '').replace('>', '') for tag in re.findall('\<.*?\>', row[5])]
+        raw_data["response_body"] = row[6]
+        raw_data["parameters"] = row[7]
+        raw_data["link"] = f"https://stackoverflow.com/a/{raw_data['answer_id']}"
+        # ID is used to populate dictionnary
+        data_dict[index] = raw_data
+        # Title and Body are combined into a single string.
+        question_text = f'{row[3]} {row[4]}'
+        dataset.append(question_text)
+        index += 1
 
     print(f"Found {len(dataset)} questions with parameters")
     print(f"Found {len(param_occurrences)} unique parameters")

@@ -33,12 +33,12 @@ class NaturalLanguageProcessor:
         if update:
             self.data_dict.update(data_dict)
             self.preprocessed_dataset.extend(self.preprocess(dataset))
-
         else:
             self.data_dict = data_dict
             self.preprocessed_dataset = self.preprocess(dataset)
-            self.model = TfidfVectorizer().fit(self.preprocessed_dataset)
-            self.model_vectors = self.model.transform(self.preprocessed_dataset)
+            
+        self.model = TfidfVectorizer().fit(self.preprocessed_dataset)
+        self.model_vectors = self.model.transform(self.preprocessed_dataset)
 
     def search(self, query):
         """Queries the trained model with input and returns indexes of the most similar sentences as well as cosine similarity scores.
