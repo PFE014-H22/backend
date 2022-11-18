@@ -9,6 +9,7 @@ from nlp.nlp import NaturalLanguageProcessor
 from src.config_parameters.cassandra.fetch_cassandra_parameters import \
     find_parameter
 from src.SO.answers import get_answers
+from src.config_parameters.technologies import get_all_technologies
 
 # Path to the pre-trained model
 MODEL_PATH = "./BD/model.pickle"
@@ -50,6 +51,18 @@ def answers(question_id: int) -> Response:
     return jsonify(answers)
 
 
+@app.route("/technologies", methods=['GET'])
+def technologies() -> Response:
+    """Fetches all available technologies to search from.
+
+    Returns:
+        Response: List of technologies.
+    """
+    print(f"GET /technologies")
+    technologies = get_all_technologies()
+    return jsonify(technologies)
+
+
 @app.route("/search", methods=['GET'])
 def search():
     """Searches for configuration parameters based on user query.
@@ -62,26 +75,28 @@ def search():
 
     # Model is used to determine questions sorted by highest similarity to query and similarity scores
     cosine_similarities, related_indexes = processor.search(query)
-    normalized_scores = processor.normalize_scores(cosine_similarities, 0, 0.8, 0, 0.9)
+    similarity_scores = [cosine_similarities[index]
+                         for index in related_indexes]
 
     # Corresponding answers to each similar questions are fetched
+    question_ids = [processor.id_dict[index] for index in related_indexes]
     answers = []
-    for i in related_indexes:
-        similarity_score = normalized_scores[i]
-        question = processor.data_dict[i]
-        answer = {
-            "question_id": question["question_id"],
-            "answer_id": question["answer_id"],
-            "similarity_score": similarity_score,
-            "parameters": question["parameters"],
-            "question_title": question["question_title"],
-            "question_body": question["question_body"],
-            "response_body": question["response_body"],
-            "tags": question["tags"], #add tags from pickle
-            "parameters": question["parameters"],
-            "link": question["link"]
-        }
-        answers.append(answer)
+    for i, question_id in enumerate(question_ids):
+        data = get_answers(question_id)
+        if data:
+            answer = data[0]
+            answer = {
+                "question_id": question_id,
+                "answer_id": answer.get("answer_id", 0),
+                "is_accepted": answer.get("is_accepted", False),
+                "link": answer.get("link", "http://example.com"),
+                "source": get_data_source(answer.get("link", "")),
+                "similarity_score": similarity_scores[i],
+                "parameters": find_parameter(answer.get("body", ""), CASSANDRA_PARAMETER_FILE),
+                "body": answer.get("body", ""),
+                "tags": ["cassandra"] #add tags from pickle
+            }
+            answers.append(answer)
 
     # Answers are sent as a response
     response = {
