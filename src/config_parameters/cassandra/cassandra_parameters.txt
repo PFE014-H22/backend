@@ -172,6 +172,7 @@ internode_application_receive_queue_capacity
 slow_query_log_timeout
 denylist_reads_enabled
 transient_replication_enabled
+table
 roles_cache_active_update
 keyspaces_warn_threshold
 collection_size_fail_threshold
