@@ -9,29 +9,34 @@ import contractions
 class NaturalLanguageProcessor:
     """Natural language processing class which offers tool to preprocess text-based datasets as well as train a text similiarity classifier based on a TF-IDF algorithm"""
 
-    def __init__(self, dataset=None, id_dict=None):
+    def __init__(self, dataset=None, data_dict=None):
         """Class constructor. Initializes object fields and trains model if dataset and dictionnary are given.
 
         Args:
             dataset (list[str], optional): Training dataset. Defaults to None.
-            id_dict (dict[int, int], optional): Dictionary with indexes as keys and question ids as values. Defaults to None.
+            data_dict (dict[int, int], optional): Dictionary with indexes as keys and raw_data as values. Defaults to None.
         """
-        if dataset and id_dict:
-            self.id_dict = id_dict
+        if dataset and data_dict:
+            self.data_dict = data_dict
             self.preprocessed_dataset = self.preprocess(dataset)
             self.model = TfidfVectorizer().fit(self.preprocessed_dataset)
             self.model_vectors = self.model.transform(
                 self.preprocessed_dataset)
 
-    def train(self, dataset, id_dict):
+    def train(self, dataset, data_dict, update=False):
         """Trains model with given dataset and dictionnary.
 
         Args:
             dataset (list[str], optional): Training dataset. Defaults to None.
-            id_dict (dict[int, int], optional): Dictionary with indexes as keys and question ids as values. Defaults to None.
+            data_dict (dict[int, int], optional): Dictionary with indexes as keys and raw_data as values. Defaults to None.
         """
-        self.id_dict = id_dict
-        self.preprocessed_dataset = self.preprocess(dataset)
+        if update:
+            self.data_dict.update(data_dict)
+            self.preprocessed_dataset.extend(self.preprocess(dataset))
+        else:
+            self.data_dict = data_dict
+            self.preprocessed_dataset = self.preprocess(dataset)
+            
         self.model = TfidfVectorizer().fit(self.preprocessed_dataset)
         self.model_vectors = self.model.transform(self.preprocessed_dataset)
 
@@ -143,3 +148,17 @@ class NaturalLanguageProcessor:
             str: Combined strings.
         """
         return ' '.join(array)
+
+    def normalize_scores(self, scores, old_min, old_max, new_min, new_max):
+        """Normalizes given scores from old range to new range.
+
+        Args:
+            scores (ndarray): List of scores to normalize.
+
+        Returns:
+            ndarray: Normalized scores.
+        """
+        print(scores)
+        scores = [(new_max - new_min) * (score - old_min) / ( old_max - old_min ) + new_min for score in scores]
+        print(scores)
+        return scores
