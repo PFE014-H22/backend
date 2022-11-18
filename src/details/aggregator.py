@@ -23,7 +23,7 @@ class DetailsAggregator:
                     for key in current_key:
                         self._aggregate_with_key(data, aggregated, key)
                 else:
-                    self._aggregate_with_key(data, aggregated, key)
+                    self._aggregate_with_key(data, aggregated, current_key)
 
         return aggregated
 

@@ -77,8 +77,7 @@ def search():
 
     # Model is used to determine questions sorted by highest similarity to query and similarity scores
     cosine_similarities, related_indexes = processor.search(query)
-    normalized_scores = processor.normalize_scores(
-        cosine_similarities, 0, 0.8, 0, 0.9)
+    normalized_scores = processor.normalize_scores(cosine_similarities, 0, 0.8, 0, 0.9)
 
     questions = []
 
@@ -88,7 +87,7 @@ def search():
         new_question = {
             "answer_id": question["answer_id"],
             "link": question["link"],
-            "parameters": eval(question["parameters"]),
+            "parameters": question["parameters"],
             "question_body": question["question_body"],
             "question_id": question["question_id"],
             "question_title": question["question_title"],
