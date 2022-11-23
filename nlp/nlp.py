@@ -158,7 +158,6 @@ class NaturalLanguageProcessor:
         Returns:
             ndarray: Normalized scores.
         """
-        print(scores)
-        scores = [(new_max - new_min) * (score - old_min) / ( old_max - old_min ) + new_min for score in scores]
-        print(scores)
+        scores = [(new_max - new_min) * (score - old_min) /
+                  (old_max - old_min) + new_min for score in scores]
         return scores
