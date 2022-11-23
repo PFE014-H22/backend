@@ -13,6 +13,7 @@ reader = csv.reader(open(input_path, 'r'))
 writer = csv.writer(open(output_path, 'w'))
 
 headers = next(reader)
+headers.append("Params")
 
 print(headers)
 writer.writerow(headers)
@@ -28,6 +29,7 @@ for row in reader:
     params = fetch_cassandra_parameters.find_parameter(row[answer_index], param_file_path)
     if params:
         counter += 1
+        row.append(params)
         writer.writerow(row)
         # print(params)
 
