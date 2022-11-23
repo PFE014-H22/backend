@@ -9,7 +9,6 @@ class AggregatorTest(unittest.TestCase):
             {'attribute': 'obj_1', 'score': 0.5, 'values': [1, 2, 3]},
             {'attribute': 'obj_1', 'score': 0.8, 'values': [1, 3]},
             {'attribute': 'obj_2', 'score': 0.4, 'is_true': True, 'values': [1]},
-            # Next object should not be aggregated because the aggregation key is not in the object (misspelled)
             {'attribut': 'obj_3', 'score': 0.75, 'values': [2, 3]}
         ]
 

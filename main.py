@@ -9,7 +9,7 @@ from nlp.nlp import NaturalLanguageProcessor
 from src.SO.answers import get_answers
 from src.config_parameters.technologies import get_all_technologies
 from src.details.aggregator import DetailsAggregator
-from src.details.builder import DetailsBuilder
+from src.details.details import Details
 from src.details.similarity_score_strategy import SimilarityScoreStrategy
 
 # Path to the pre-trained model
@@ -99,28 +99,27 @@ def search():
         questions.append(new_question)
 
     aggregator = DetailsAggregator(questions, "parameters")
-    aggregator.add_column_from_data_column('link', 'source_name', get_data_source)
     aggregated_data = aggregator.aggregate()
 
-    answers = []
+    details_list = []
 
     for parameter in aggregated_data:
-        builder = DetailsBuilder(
+        details = Details(
             aggregated_data.get(parameter), 
             parameter, 
             "lorem ipsum", 
-            SimilarityScoreStrategy.HIGHEST,
+            SimilarityScoreStrategy.LOWEST,
             [
                 'answer_id',  'link',  'question_body', 'question_id',
                 'question_title', 'response_body', 'similarity_score', 'source_name', 'tags'
             ]
         )
-        answer = builder.build()
-        answers.append(answer)
+        details_json = details.to_json()
+        details_list.append(details_json)
 
     # Answers are sent as a response
     response = {
-        "answers": answers,
+        "answers": details_list,
         "query": query,
         "technology": technology
     }
