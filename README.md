@@ -5,13 +5,13 @@ backend
 ## To build the docker container
 
 ```bash
-docker-compose build
+docker compose build
 ```
 
 ## To run the docker container
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 ## To query the questions from StackOverflow
