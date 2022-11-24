@@ -1,3 +1,7 @@
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
+import os
+import time
 import pickle
 
 from dotenv import load_dotenv
@@ -23,6 +27,19 @@ print("Model loaded")
 
 load_dotenv()
 app = Flask(__name__)
+
+
+def print_date_time():
+    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=print_date_time, trigger="interval",
+                  seconds=int(os.environ['MODEL_UPDATE_INTERVAL_SECONDS']))
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 
 @app.route("/")
@@ -94,7 +111,7 @@ def search():
                 "similarity_score": similarity_scores[i],
                 "parameters": find_parameter(answer.get("body", ""), CASSANDRA_PARAMETER_FILE),
                 "body": answer.get("body", ""),
-                "tags": ["cassandra"] #add tags from pickle
+                "tags": ["cassandra"]  # add tags from pickle
             }
             answers.append(answer)
 
