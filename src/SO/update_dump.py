@@ -55,25 +55,9 @@ def get_answers(page_number: int, question_ids: str):
     json_response = response.json()
     return json_response
 
-def updateDump():
+def updateDump(last_update: int, current_time: int, df_csv, input_path: str, param_file_path: str):
     """Main function of the script, will fetch the last update time from the SQLite DB and update the csv
     """
-    input_path = "../../BD/QueryResults.csv"
-
-    param_file_path = "../config_parameters/cassandra/cassandra_parameters.txt"
-
-    con = sqlite3.connect("../../BD/DOPAMine.db")
-    cur = con.cursor()
-
-    # get timestamp of last update
-    res = cur.execute("SELECT * FROM UpdateStamp ORDER BY UpdateTime DESC LIMIT 1")
-    last_update = res.fetchone()[0]
-    print(last_update)
-
-    df_csv = pd.read_csv(input_path)
-
-    current_time = int(time.time())
-    print(current_time)
 
     #iterate through API until we reach the last page
     page_number = 1
@@ -81,13 +65,9 @@ def updateDump():
     while True:
         questions = get_questions(page_number, last_update, current_time)
         new_questions.extend(questions["items"])
-        print(page_number)
-        print(questions["has_more"])
         if (questions["has_more"] == False):
             break
         page_number += 1
-
-    print(len(new_questions))
 
     #filter the list of questions to only get the ones with an accepted answer and not already on the csv
     #fill the question_ids string to use in answers API call
@@ -96,19 +76,14 @@ def updateDump():
         try:
             print(question["accepted_answer_id"])
             if (df_csv["Id"].eq(question["question_id"]).any()):
-                print("question: " + str(question["question_id"]))
                 new_questions.remove(question)
             else:
-                print("good: " + str(question["question_id"]))
                 if not question_ids:
                     question_ids += str(question["question_id"])
                 else:
                     question_ids += ';' + str(question["question_id"])
         except:
             new_questions.remove(question)
-
-    print(len(new_questions))
-    print(question_ids)
 
     #iterate through answers API until we reach last page
     if new_questions:
@@ -117,13 +92,9 @@ def updateDump():
         while True:
             answers = get_answers(page_number, question_ids)
             new_answers.extend(answers["items"])
-            print(page_number)
-            print(answers["has_more"])
             if (answers["has_more"] == False):
                 break
             page_number += 1
-
-        print(len(new_answers))
 
         #filter API response to keep only the accepted answers
         for answer in new_answers[:]:
@@ -135,11 +106,7 @@ def updateDump():
                 if not params:
                     new_answers.remove(answer)
                 else:
-                    # can remove
-                    print(params)
                     answer['params'] = params
-
-        print(len(new_answers))
 
     list_to_add = []
     # merge questions and answers
@@ -149,10 +116,6 @@ def updateDump():
                 question['answer_body'] = answer['body']
                 question['params'] = answer['params']
                 list_to_add.append(question)
-
-    print(len(list_to_add))
-
-    print(len(df_csv))
 
     #add questions to the Dataframe before overwriting csv
     for question in list_to_add:
@@ -166,20 +129,10 @@ def updateDump():
             'Tags': question['tags'],
             'Params': question['params']
         }
-
-        print(to_add['Id'])
         df_csv = pd.concat(
             [df_csv, pd.DataFrame.from_records([to_add])], ignore_index=True)
 
-    print(len(df_csv))
-
     df_csv.to_csv(input_path, index=False)
-
-    # insert new updated timestamp
-    exec_str = "INSERT INTO UpdateStamp VALUES(" + str(current_time) + ");"
-    res = cur.execute(exec_str)
-    con.commit()
-    con.close()
 
 if __name__ == '__main__':
     updateDump()

@@ -3,6 +3,8 @@ import atexit
 import os
 import time
 import pickle
+import pandas as pd
+import sqlite3
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
@@ -32,9 +34,33 @@ print("Model loaded")
 load_dotenv()
 app = Flask(__name__)
 
+def scheduledUpdate():
+    input_path = "BD/QueryResults.csv"
+
+    param_file_path = "src/config_parameters/cassandra/cassandra_parameters.txt"
+
+    con = sqlite3.connect("BD/DOPAMine.db")
+    cur = con.cursor()
+
+    # get timestamp of last update
+    res = cur.execute("SELECT * FROM UpdateStamp ORDER BY UpdateTime DESC LIMIT 1")
+    last_update = res.fetchone()[0]
+
+    df_csv = pd.read_csv(input_path)
+
+    current_time = int(time.time())
+    updateDump(last_update, current_time, df_csv, input_path, param_file_path)
+
+    # insert new updated timestamp
+    exec_str = "INSERT INTO UpdateStamp VALUES(" + str(current_time) + ");"
+    res = cur.execute(exec_str)
+    con.commit()
+    con.close()
+
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=updateDump, trigger="interval",
                   seconds=int(os.environ['MODEL_UPDATE_INTERVAL_SECONDS']))
+
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
