@@ -15,6 +15,9 @@ from src.config_parameters.technologies import get_all_technologies
 from src.details.aggregator import DetailsAggregator
 from src.details.details import Details
 from src.details.similarity_score_strategy import SimilarityScoreStrategy
+from src.SO.update_dump import updateDump
+from src.config_parameters.cassandra import fetch_cassandra_parameters
+
 
 # Path to the pre-trained model
 MODEL_PATH = "./BD/model.pickle"
@@ -30,12 +33,11 @@ load_dotenv()
 app = Flask(__name__)
 
 
-def print_date_time():
-    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
-
+def updateDumpSchedule():
+    updateDump()
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=print_date_time, trigger="interval",
+scheduler.add_job(func=updateDumpSchedule, trigger="interval",
                   seconds=int(os.environ['MODEL_UPDATE_INTERVAL_SECONDS']))
 scheduler.start()
 
