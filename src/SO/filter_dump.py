@@ -4,6 +4,9 @@ import sys
 from src.config_parameters.cassandra import fetch_cassandra_parameters
 
 def filterDump():
+    """Main function of the filter script, this script is only call once at the beginning of the project
+    We download the csv from the DataExplorer and filter through it to only keep the answers with cassandra parameters
+    """
     input_path = "../../BD/QueryResults.csv"
     output_path = "../../BD/QueryResults_1.csv"
 

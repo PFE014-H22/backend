@@ -9,7 +9,15 @@ from src.config_parameters.cassandra import fetch_cassandra_parameters
 
 
 #get all questions with tag cassandra since last update
-def get_questions(page_number: int):
+def get_questions(page_number: int, last_update: int, current_time: int):
+    """Calls StackExchange API to get all questions with new activity since last update
+
+    Args:
+        page_number (int): page of the API response, which will be itirated through with that page number
+
+    Returns:
+        json_response (json): response of the API
+    """
     params = {}
     params["page"] = page_number
     params["filter"] = "!LaSRLv)IebuJjL3K5V4E*n"
@@ -26,6 +34,15 @@ def get_questions(page_number: int):
 
 #get all answers to string of question ids
 def get_answers(page_number: int, question_ids: str):
+    """Calls StackExchange API to get all anwers of given question_ids string
+
+    Args:
+        page_number (int): page of the API response, which will be itirated through with that page number
+        question_ids (str): string containing a series of ids separated by a ;
+
+    Returns:
+        json_response: response of the API
+    """
     params = {}
     params["page"] = page_number
     params["filter"] = "!3uwOg-jScb2C0YKOD"
@@ -39,6 +56,8 @@ def get_answers(page_number: int, question_ids: str):
     return json_response
 
 def updateDump():
+    """Main function of the script, will fetch the last update time from the SQLite DB and update the csv
+    """
     input_path = "../../BD/QueryResults.csv"
 
     param_file_path = "../config_parameters/cassandra/cassandra_parameters.txt"
@@ -60,7 +79,7 @@ def updateDump():
     page_number = 1
     new_questions = []
     while True:
-        questions = get_questions(page_number)
+        questions = get_questions(page_number, last_update, current_time)
         new_questions.extend(questions["items"])
         print(page_number)
         print(questions["has_more"])

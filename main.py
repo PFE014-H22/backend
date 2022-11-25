@@ -32,12 +32,8 @@ print("Model loaded")
 load_dotenv()
 app = Flask(__name__)
 
-
-def updateDumpSchedule():
-    updateDump()
-
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=updateDumpSchedule, trigger="interval",
+scheduler.add_job(func=updateDump, trigger="interval",
                   seconds=int(os.environ['MODEL_UPDATE_INTERVAL_SECONDS']))
 scheduler.start()
 
