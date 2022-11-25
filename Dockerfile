@@ -20,10 +20,5 @@ RUN python -m spacy download en_core_web_sm
 WORKDIR /app
 COPY . /app
 
-#cronjob for dump update
-COPY my_python /bin/my_python
-COPY root /var/spool/cron/crontabs/root
-RUN chmod +x /bin/my_python
-
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["gunicorn", "--bind", "0.0.0.0:3001", "main:app"]
