@@ -19,3 +19,20 @@ def get_all_technologies() -> list:
     return list(map(
         lambda x: {"key": x, "value": x},
         technologies))
+
+
+def find_parameter(text: str, parameter_file: str) -> list:
+    """
+    Finds all the parameters of the file present in the text
+
+    Args:
+        text (str): text to be searched
+        parameter_file (str): file containing the parameters
+
+    Returns:
+        list[str]: list of parameters present in the text
+    """
+    with open(parameter_file, "r") as f:
+        parameters = f.read().splitlines()
+
+    return list(set(text.split(" ")).intersection(parameters))

@@ -1,8 +1,6 @@
 import csv
-import sys
 
-sys.path.insert(0, '../config_parameters/cassandra/')
-import fetch_cassandra_parameters
+from src.config_parameters.technologies import find_parameter
 
 input_path = "../../BD/QueryResults.csv"
 output_path = "../../BD/QueryResults_1.csv"
@@ -26,7 +24,7 @@ for row in reader:
     # print(text)
 
     # on recoit une liste contenant tout les params cassandra
-    params = fetch_cassandra_parameters.find_parameter(row[answer_index], param_file_path)
+    params = find_parameter(row[answer_index], param_file_path)
     if params:
         counter += 1
         row.append(params)

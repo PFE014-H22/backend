@@ -1,13 +1,10 @@
-import csv
-from os import environ
-import requests
-import time
-import sys
-import pandas as pd
 import sqlite3
+import time
 
-sys.path.insert(0, '../config_parameters/cassandra/')
-import fetch_cassandra_parameters
+import pandas as pd
+import requests
+
+from src.config_parameters.technologies import find_parameter
 
 input_path = "../../BD/QueryResults.csv"
 
@@ -26,7 +23,9 @@ df_csv = pd.read_csv(input_path)
 current_time = int(time.time())
 print(current_time)
 
-#get all questions with tag cassandra since last update
+# get all questions with tag cassandra since last update
+
+
 def get_questions(page_number: int):
     params = {}
     params["page"] = page_number
@@ -42,7 +41,9 @@ def get_questions(page_number: int):
     json_response = response.json()
     return json_response
 
-#get all answers to string of question ids
+# get all answers to string of question ids
+
+
 def get_answers(page_number: int, question_ids: str):
     params = {}
     params["page"] = page_number
@@ -56,7 +57,8 @@ def get_answers(page_number: int, question_ids: str):
     json_response = response.json()
     return json_response
 
-#iterate through API until we reach the last page
+
+# iterate through API until we reach the last page
 page_number = 1
 new_questions = []
 while True:
@@ -70,8 +72,8 @@ while True:
 
 print(len(new_questions))
 
-#filter the list of questions to only get the ones with an accepted answer and not already on the csv
-#fill the question_ids string to use in answers API call
+# filter the list of questions to only get the ones with an accepted answer and not already on the csv
+# fill the question_ids string to use in answers API call
 question_ids = ""
 for question in new_questions[:]:
     try:
@@ -91,7 +93,7 @@ for question in new_questions[:]:
 print(len(new_questions))
 print(question_ids)
 
-#iterate through answers API until we reach last page
+# iterate through answers API until we reach last page
 if new_questions:
     page_number = 1
     new_answers = []
@@ -106,12 +108,12 @@ if new_questions:
 
     print(len(new_answers))
 
-    #filter API response to keep only the accepted answers
+    # filter API response to keep only the accepted answers
     for answer in new_answers[:]:
         if (answer['is_accepted'] == False):
             new_answers.remove(answer)
         else:
-            params = fetch_cassandra_parameters.find_parameter(
+            params = find_parameter(
                 answer['body'], param_file_path)
             if not params:
                 new_answers.remove(answer)
@@ -135,7 +137,7 @@ print(len(list_to_add))
 
 print(len(df_csv))
 
-#add questions to the Dataframe before overwriting csv
+# add questions to the Dataframe before overwriting csv
 for question in list_to_add:
     to_add = {
         'Id': str(question['question_id']),
