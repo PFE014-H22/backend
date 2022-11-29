@@ -117,6 +117,7 @@ def updateDump(last_update: int, current_time: int, df_csv, input_path: str, par
                 question['params'] = answer['params']
                 list_to_add.append(question)
 
+    current_csv_length = len(df_csv)
     #add questions to the Dataframe before overwriting csv
     for question in list_to_add:
         to_add = {
@@ -132,7 +133,13 @@ def updateDump(last_update: int, current_time: int, df_csv, input_path: str, par
         df_csv = pd.concat(
             [df_csv, pd.DataFrame.from_records([to_add])], ignore_index=True)
 
+    new_csv_length = len(df_csv)
     df_csv.to_csv(input_path, index=False)
+
+    if current_csv_length == new_csv_length :
+        return False
+    else :
+        return True
 
 if __name__ == '__main__':
     updateDump()

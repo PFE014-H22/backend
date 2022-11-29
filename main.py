@@ -19,6 +19,7 @@ from src.details.details import Details
 from src.details.similarity_score_strategy import SimilarityScoreStrategy
 from src.SO.update_dump import updateDump
 from src.config_parameters.cassandra import fetch_cassandra_parameters
+from train_model import train_model
 
 
 # Path to the pre-trained model
@@ -49,13 +50,22 @@ def scheduledUpdate():
     df_csv = pd.read_csv(input_path)
 
     current_time = int(time.time())
-    updateDump(last_update, current_time, df_csv, input_path, param_file_path)
+    updated = updateDump(last_update, current_time, df_csv, input_path, param_file_path)
 
     # insert new updated timestamp
     exec_str = "INSERT INTO UpdateStamp VALUES(" + str(current_time) + ");"
     res = cur.execute(exec_str)
     con.commit()
     con.close()
+
+    if updated:
+        QUERY_RESULTS_PATH = "BD/QueryResults.csv"
+        MODEL_PATH = "BD/model.pickle"
+
+        train_model(
+            csv_path=QUERY_RESULTS_PATH,
+            output_path=MODEL_PATH
+        )
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=scheduledUpdate, trigger="interval",
