@@ -58,7 +58,7 @@ def scheduledUpdate():
     con.close()
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=updateDump, trigger="interval",
+scheduler.add_job(func=scheduledUpdate, trigger="interval",
                   seconds=int(os.environ['MODEL_UPDATE_INTERVAL_SECONDS']))
 
 scheduler.start()
