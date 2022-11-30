@@ -107,7 +107,6 @@ def search():
         details = Details(
             aggregated_data.get(parameter), 
             parameter, 
-            "lorem ipsum", 
             SimilarityScoreStrategy.LOWEST,
             [
                 'answer_id',  'link',  'question_body', 'question_id',

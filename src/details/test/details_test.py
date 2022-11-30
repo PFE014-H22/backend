@@ -36,7 +36,6 @@ class DetailsTest(unittest.TestCase):
     def test_details(self):
         expected_details = {
             'parameter': {
-                'description': 'lorem ipsum',
                 'matches': 2,
                 'name': 'connection_size'
             },
@@ -71,7 +70,6 @@ class DetailsTest(unittest.TestCase):
             details = Details(
                 self.data[parameter],
                 parameter,
-                "lorem ipsum",
                 SimilarityScoreStrategy.HIGHEST,
                 [
                     'answer_id',  'link',  'question_body', 'question_id', 'question_title',
