@@ -66,6 +66,12 @@ def scheduledUpdate():
             csv_path=QUERY_RESULTS_PATH,
             output_path=MODEL_PATH
         )
+    
+    # Model is loaded into NLP object
+    print("Loading model...")
+    with open(MODEL_PATH, 'rb') as file:
+        processor: NaturalLanguageProcessor = pickle.load(file)
+    print("Model loaded")
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=scheduledUpdate, trigger="interval",
