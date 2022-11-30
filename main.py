@@ -107,7 +107,7 @@ def search():
         details = Details(
             aggregated_data.get(parameter), 
             parameter, 
-            SimilarityScoreStrategy.LOWEST,
+            SimilarityScoreStrategy.HIGHEST,
             [
                 'answer_id',  'link',  'question_body', 'question_id',
                 'question_title', 'response_body', 'similarity_score', 'source_name', 'tags'
