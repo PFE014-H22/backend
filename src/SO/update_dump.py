@@ -1,9 +1,3 @@
-import csv
-from os import environ
-import requests
-import time
-import sys
-import pandas as pd
 import sqlite3
 from src.config_parameters.cassandra import fetch_cassandra_parameters
 
@@ -32,7 +26,9 @@ def get_questions(page_number: int, last_update: int, current_time: int):
     json_response = response.json()
     return json_response
 
-#get all answers to string of question ids
+# get all answers to string of question ids
+
+
 def get_answers(page_number: int, question_ids: str):
     """Calls StackExchange API to get all anwers of given question_ids string
 

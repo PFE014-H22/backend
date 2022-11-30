@@ -1,15 +1,15 @@
 import csv
-import os
-from nlp.nlp import NaturalLanguageProcessor
-from src.config_parameters.cassandra.fetch_cassandra_parameters import \
-    find_parameter
-import pickle
-import time
 import json
+import os
+import pickle
 import re
+import time
+
+from nlp.nlp import NaturalLanguageProcessor
 
 CASSANDRA_PARAMETER_FILE = "./src/config_parameters/cassandra/cassandra_parameters.txt"
 CSV_COLUMNS = 7
+
 
 def train_model(
     csv_path: str,
@@ -43,9 +43,11 @@ def train_model(
         raw_data["creation_date"] = row[2]
         raw_data["question_title"] = row[3]
         raw_data["question_body"] = row[4]
-        raw_data["tags"] = [tag.replace('<', '').replace('>', '') for tag in re.findall('\<.*?\>', row[5])]
+        raw_data["tags"] = [tag.replace('<', '').replace(
+            '>', '') for tag in re.findall('\<.*?\>', row[5])]
         raw_data["response_body"] = row[6]
-        raw_data["parameters"] = [param.replace("'", "") for param in re.findall(r"'.*?'", row[7])]
+        raw_data["parameters"] = [param.replace(
+            "'", "") for param in re.findall(r"'.*?'", row[7])]
         raw_data["link"] = f"https://stackoverflow.com/a/{raw_data['answer_id']}"
         # ID is used to populate dictionnary
         data_dict[index] = raw_data

@@ -1,7 +1,6 @@
 import csv
-import sys
 
-from src.config_parameters.cassandra import fetch_cassandra_parameters
+from src.config_parameters.technologies import find_parameter
 
 def filterDump():
     """Main function of the filter script, this script is only call once at the beginning of the project
@@ -29,7 +28,7 @@ def filterDump():
         # print(text)
 
         # on recoit une liste contenant tout les params cassandra
-        params = fetch_cassandra_parameters.find_parameter(row[answer_index], param_file_path)
+        params = find_parameter(row[answer_index], param_file_path)
         if params:
             counter += 1
             row.append(params)

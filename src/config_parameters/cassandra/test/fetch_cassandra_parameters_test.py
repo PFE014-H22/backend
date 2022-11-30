@@ -1,7 +1,7 @@
 
 import unittest
 
-from src.config_parameters.cassandra.fetch_cassandra_parameters import find_parameter
+from src.config_parameters.technologies import find_parameter
 
 
 class TestFindParameters(unittest.TestCase):
