@@ -1,7 +1,5 @@
 # Backend
 
-backend
-
 ## To build the docker container
 
 ```bash
