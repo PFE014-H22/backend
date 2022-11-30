@@ -1,4 +1,5 @@
-import sqlite3
+import requests
+import pandas as pd
 from src.config_parameters.cassandra import fetch_cassandra_parameters
 
 
