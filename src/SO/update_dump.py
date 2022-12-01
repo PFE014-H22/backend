@@ -70,8 +70,7 @@ def updateDump(last_update: int, current_time: int, df_csv, input_path: str, par
     #fill the question_ids string to use in answers API call
     question_ids = ""
     for question in new_questions[:]:
-        try:
-            print(question["accepted_answer_id"])
+        if 'accepted_answer_id' in question:
             if (df_csv["Id"].eq(question["question_id"]).any()):
                 new_questions.remove(question)
             else:
@@ -79,7 +78,7 @@ def updateDump(last_update: int, current_time: int, df_csv, input_path: str, par
                     question_ids += str(question["question_id"])
                 else:
                     question_ids += ';' + str(question["question_id"])
-        except:
+        else:
             new_questions.remove(question)
 
     #iterate through answers API until we reach last page
