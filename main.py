@@ -18,7 +18,7 @@ from src.details.aggregator import DetailsAggregator
 from src.details.details import Details
 from src.details.similarity_score_strategy import SimilarityScoreStrategy
 from src.SO.update_dump import updateDump
-from src.config_parameters.cassandra import fetch_cassandra_parameters
+from src.config_parameters.technologies import find_parameter
 from train_model import train_model
 
 

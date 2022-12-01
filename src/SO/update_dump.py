@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from src.config_parameters.cassandra import fetch_cassandra_parameters
+from src.config_parameters.technologies import find_parameter
 
 
 #get all questions with tag cassandra since last update
@@ -98,7 +98,7 @@ def updateDump(last_update: int, current_time: int, df_csv, input_path: str, par
             if (answer['is_accepted'] == False):
                 new_answers.remove(answer)
             else:
-                params = fetch_cassandra_parameters.find_parameter(
+                params = find_parameter(
                     answer['body'], param_file_path)
                 if not params:
                     new_answers.remove(answer)
