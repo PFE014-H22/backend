@@ -63,6 +63,7 @@ class Dopamine:
         con.close()
 
         if updated:
+            print("Scheduled model update in progress...")
             QUERY_RESULTS_PATH = "BD/QueryResults.csv"
             MODEL_PATH = "BD/model.pickle"
 
@@ -73,6 +74,7 @@ class Dopamine:
         
             # Model is loaded into NLP object
             self.load_model()
+            print("Model updated")
 
 dopamine = Dopamine();
 
