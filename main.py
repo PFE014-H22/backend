@@ -142,8 +142,9 @@ def search():
     questions = []
 
     for i in related_indexes:
-        similarity_score = normalized_scores[i]
-        question = processor.data_dict[i]
+        index = int(i)
+        similarity_score = normalized_scores[index]
+        question = processor.data_dict[index]
         new_question = {
             "answer_id": question["answer_id"],
             "link": question["link"],

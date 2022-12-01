@@ -57,8 +57,6 @@ def train_model(
         index += 1
 
     print(f"Found {len(dataset)} questions with parameters")
-    print(f"Found {len(param_occurrences)} unique parameters")
-    print(json.dumps(param_occurrences, indent=4))
     # Model is trained.
     print("Training model...")
     nlp.train(dataset, data_dict)

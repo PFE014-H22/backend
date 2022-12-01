@@ -56,11 +56,19 @@ class NaturalLanguageProcessor:
         cosine_similarities = cosine_similarity(
             query_vector, self.model_vectors).flatten()
         # Filter out low scores
-        filtered_scores = [score for score in cosine_similarities if score > float(score_threshold)]
-        filtered_scores = np.array(filtered_scores)
-        # Sort by highest score
-        related_docs_indices = filtered_scores.argsort()[:-filtered_scores.size-1:-1]
-        return filtered_scores, related_docs_indices
+        filtered_scores = []
+        related_docs_indices = []
+
+        for i in range(len(cosine_similarities)):
+            if cosine_similarities[i] >= float(score_threshold):
+                filtered_scores.append(cosine_similarities[i])
+                related_docs_indices.append(i)
+
+        array_2d = np.vstack((filtered_scores, related_docs_indices)).T
+        sorted_indices = np.lexsort((array_2d[:,1],array_2d[:,0]))[::-1]
+        array_2d = array_2d[sorted_indices]
+
+        return cosine_similarities, array_2d[:, 1]
     
 
     def preprocess(self, input):
