@@ -1,4 +1,10 @@
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
+import os
+import time
 import pickle
+import pandas as pd
+import sqlite3
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
@@ -11,6 +17,10 @@ from src.config_parameters.technologies import get_all_technologies
 from src.details.aggregator import DetailsAggregator
 from src.details.details import Details
 from src.details.similarity_score_strategy import SimilarityScoreStrategy
+from src.SO.update_dump import updateDump
+from src.config_parameters.technologies import find_parameter
+from train_model import train_model
+
 
 # Path to the pre-trained model
 MODEL_PATH = "./BD/model.pickle"
@@ -24,6 +34,53 @@ print("Model loaded")
 
 load_dotenv()
 app = Flask(__name__)
+
+def scheduledUpdate():
+    input_path = "BD/QueryResults.csv"
+
+    param_file_path = "src/config_parameters/cassandra/cassandra_parameters.txt"
+
+    con = sqlite3.connect("BD/DOPAMine.db")
+    cur = con.cursor()
+
+    # get timestamp of last update
+    res = cur.execute("SELECT * FROM UpdateStamp ORDER BY UpdateTime DESC LIMIT 1")
+    last_update = res.fetchone()[0]
+
+    df_csv = pd.read_csv(input_path)
+
+    current_time = int(time.time())
+    updated = updateDump(last_update, current_time, df_csv, input_path, param_file_path)
+
+    # insert new updated timestamp
+    exec_str = "INSERT INTO UpdateStamp VALUES(" + str(current_time) + ");"
+    res = cur.execute(exec_str)
+    con.commit()
+    con.close()
+
+    if updated:
+        QUERY_RESULTS_PATH = "BD/QueryResults.csv"
+        MODEL_PATH = "BD/model.pickle"
+
+        train_model(
+            csv_path=QUERY_RESULTS_PATH,
+            output_path=MODEL_PATH
+        )
+    
+        # Model is loaded into NLP object
+        print("Loading updated model...")
+        with open(MODEL_PATH, 'rb') as file:
+            processor: NaturalLanguageProcessor = pickle.load(file)
+        print("Model loaded")
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=scheduledUpdate, trigger="interval",
+                  seconds=int(os.environ['MODEL_UPDATE_INTERVAL_SECONDS']))
+
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 
 @app.route("/")
@@ -76,7 +133,7 @@ def search():
     print(f"GET /search?q={query}&t={technology}")
 
     # Model is used to determine questions sorted by highest similarity to query and similarity scores
-    cosine_similarities, related_indexes = processor.search(query)
+    cosine_similarities, related_indexes = processor.search(query, os.environ['SCORE_THRESHOLD'])
     normalized_scores = processor.normalize_scores(cosine_similarities, 0, 0.8, 0, 0.9)
 
     questions = []
