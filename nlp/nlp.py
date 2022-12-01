@@ -4,6 +4,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import spacy
 import contractions
+import numpy as np
 
 
 class NaturalLanguageProcessor:
@@ -55,10 +56,11 @@ class NaturalLanguageProcessor:
         cosine_similarities = cosine_similarity(
             query_vector, self.model_vectors).flatten()
         # Filter out low scores
-        cosine_similarities = cosine_similarities[cosine_similarities > score_threshold]
+        filtered_scores = [score for score in cosine_similarities if score > float(score_threshold)]
+        filtered_scores = np.array(filtered_scores)
         # Sort by highest score
-        related_docs_indices = cosine_similarities.argsort()[:-cosine_similarities.size-1:-1]
-        return cosine_similarities, related_docs_indices
+        related_docs_indices = filtered_scores.argsort()[:-filtered_scores.size-1:-1]
+        return filtered_scores, related_docs_indices
     
 
     def preprocess(self, input):
