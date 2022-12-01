@@ -9,10 +9,9 @@ class Details:
     This class represents the details for a configuration parameter.
     """
 
-    def __init__(self,  data: List[dict], parameter_name: str, parameter_description: str, similarity_score_strategy: SimilarityScoreStrategy, keys_list: List[str]):
+    def __init__(self,  data: List[dict], parameter_name: str, similarity_score_strategy: SimilarityScoreStrategy, keys_list: List[str]):
         self.data = data
         self.parameter_name = parameter_name
-        self.parameter_description = parameter_description
         self.similarity_score_strategy = similarity_score_strategy
         self.keys_list = keys_list
 
@@ -24,7 +23,6 @@ class Details:
         return {
             "parameter": {
                 "name": self.parameter_name,
-                "description": self.parameter_description,
                 "matches": self._get_number_matches()
             },
             "similarity_score": self._get_similarity_score(),

@@ -66847,3 +66847,118 @@ java.lang.AssertionError: Lower bound [INCL_END_BOUND(2022-10-15 15:23Z) ]is big
 </ol>
 <p>This should fix your problem. Cheers!</p>
 ",['table']
+74490155,74490739,1668776858,"Spring-boot app with ShedLock on Cassandra, getting &quot;NullPointerException: table can not be null&quot;","<p>I am trying to integrate shedlock in my spring boot project using a cassandra db.</p>
+<p>But I am getting the below error on application startup.</p>
+<pre><code>2022-11-18 17:35:29,162 [main] ERRR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'lockProvider'
+
+Caused by: java.lang.NullPointerException: table can not be null
+    at java.base/java.util.Objects.requireNonNull(Objects.java:233)
+    at net.javacrumbs.shedlock.provider.cassandra.CassandraLockProvider$Configuration.&lt;init&gt;(CassandraLockProvider.java:69)
+    at net.javacrumbs.shedlock.provider.cassandra.CassandraLockProvider$Configuration$Builder.build(CassandraLockProvider.java:157)
+</code></pre>
+<p>application.yml file</p>
+<pre class=""lang-yaml prettyprint-override""><code>server:
+  port: 8080
+  data:
+    cassandra:
+      port: ${CASSANDRA_PORT:9042}
+      username: ${CASSANDRA_USERNAME:cassandra}
+      password: ${CASSANDRA_PASSWORD:cassandra}
+      keyspace-name: ${CASSANDRA_KEYSPACE_NAME:my_keyspace}
+      schema-action: recreate
+      local-datacenter: ${CASSANDRA_LOCAL_DATACENTER:datacenter123}
+      contact-points: ${CASSANDRA_HOST:localhost}
+
+</code></pre>
+<p>Configuration class</p>
+<pre class=""lang-java prettyprint-override""><code>import com.datastax.oss.driver.api.core.CqlSession;
+import net.javacrumbs.shedlock.provider.cassandra.CassandraLockProvider;
+import net.javacrumbs.shedlock.provider.cassandra.CassandraLockProvider.Configuration;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+@org.springframework.context.annotation.Configuration
+
+@EnableScheduling
+@EnableSchedulerLock(defaultLockAtMostFor = &quot;10m&quot;)
+
+public class MyAppSchedulerConfiguration {
+
+  @Bean
+  public CassandraLockProvider lockProvider(CqlSession cqlSession) {
+    return new CassandraLockProvider(Configuration.builder().withCqlSession(cqlSession).build());
+  }
+  
+}
+
+</code></pre>
+<p>pom.xml file</p>
+<pre class=""lang-xml prettyprint-override""><code>
+&lt;parent&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+  &lt;version&gt;2.3.7.RELEASE&lt;/version&gt;
+  &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+&lt;/parent&gt;
+
+
+&lt;shedlock.version&gt;4.42.0&lt;/shedlock.version&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;net.javacrumbs.shedlock&lt;/groupId&gt;
+  &lt;artifactId&gt;shedlock-spring&lt;/artifactId&gt;
+  &lt;version&gt;${shedlock.version}&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;net.javacrumbs.shedlock&lt;/groupId&gt;
+  &lt;artifactId&gt;shedlock-provider-cassandra&lt;/artifactId&gt;
+  &lt;version&gt;${shedlock.version}&lt;/version&gt;
+&lt;/dependency&gt;
+
+</code></pre>
+<p>Cassandra script executed</p>
+<pre class=""lang-sql prettyprint-override""><code>CREATE KEYSPACE shedlock with replication={'class':'SimpleStrategy', 'replication_factor':1} and durable_writes=true;
+CREATE TABLE shedlock.lock (name text PRIMARY KEY, lockUntil timestamp, lockedAt timestamp, lockedBy text);
+</code></pre>
+<p>I have verified via cqlsh that the lock table is created in cassandra.</p>
+<p>The problem in my opinion so far is that the CqlSession bean is not available due to some reason and should have been.</p>
+<p>I have tried the configurations as mentioned in the <a href=""https://github.com/lukas-krecan/ShedLock/blob/master/README.md#cassandra"" rel=""nofollow noreferrer"">official documentation page</a>.</p>
+<p>I have tried downgrading versions of springboot and shedlock but of no use.
+**Springboot **version change
+2.5.x (same error)
+2.2.13.RELEASE (same error)
+2.3.x (same error)</p>
+","['java', 'spring-boot', 'dependency-injection', 'cassandra', 'shedlock']","<p>I think you have to specify tableName like this</p>
+<pre><code>  @Bean
+  public CassandraLockProvider lockProvider(CqlSession cqlSession) {
+    return new CassandraLockProvider(Configuration.builder().withCqlSession(cqlSession).withTableName(&quot;lock&quot;).build());
+  }
+</code></pre>
+<p>It seems the default table name is not set when using the Configuration builder.</p>
+",['table']
+74474143,74523448,1668682192,Storing a single compressed JSON column than multiple columns in Cassandra?,"<p>Purpose of the table is to maintain Audits.
+Expected Behaviour: Huge writes with infrequent reads and no edits.</p>
+<p><strong>Table Definition:</strong></p>
+<pre><code>PartitionKey(multiple columns), ClusteringKey(time-uuid), json BLOB;
+</code></pre>
+<p><strong>json</strong> will hold Snappy.compressed bytes[]. I am trying to store high frequent large data in this table  with least partition size.</p>
+<p>What do you think about a single BLOB column that holds compressed JSON or multiple columns in Cassandra?</p>
+","['cassandra', 'data-modeling', 'cassandra-3.0', 'datamodel', 'snappy']","<p>I think it depends on your usage pattern.  Once written, will the JSON data change at all?  If it will, you'll end up having to rewrite the entire column value (which will be expensive in terms of temporary disk space used).</p>
+<p>In that case, using individual columns might be the better option.  Remember that Cassandra does allow you to read and write while representing the table structure as JSON.  So if you end up going the individual column route, that feature allows you to abstract CRUD operations with JSON.</p>
+<p>But if you're just writing once and updates are rare, then a JSON blob should be fine.</p>
+<blockquote>
+<p>Does Cassandra compress cell values?</p>
+</blockquote>
+<p>Yes.  By default, all created tables will use the <code>LZ4Compressor</code>.</p>
+<blockquote>
+<p>Is the data stored as a String or some compressed byte[] in the sstables?</p>
+</blockquote>
+<p>All data in Cassandra is stored (on disk) as a hex byte array.</p>
+<blockquote>
+<p>Asking this to understand if is worth compressing JSON in app server and storing in Cassandra as BLOB.</p>
+</blockquote>
+<p>I would not.  Basically, you'd compress in the app layer only to have it compressed again at write-time.  You should be fine just letting Cassandra handle the compression.</p>
+",['table']

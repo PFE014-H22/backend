@@ -4,6 +4,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import spacy
 import contractions
+import numpy as np
 
 
 class NaturalLanguageProcessor:
@@ -40,7 +41,7 @@ class NaturalLanguageProcessor:
         self.model = TfidfVectorizer().fit(self.preprocessed_dataset)
         self.model_vectors = self.model.transform(self.preprocessed_dataset)
 
-    def search(self, query):
+    def search(self, query, score_threshold=0.1):
         """Queries the trained model with input and returns indexes of the most similar sentences as well as cosine similarity scores.
 
         Args:
@@ -48,14 +49,27 @@ class NaturalLanguageProcessor:
 
         Returns:
             ndarray: List of all similarity scores with query.
-            ndarray: Indexes of 10 highest similarities.
+            ndarray: Indexes of similarities sorted from highest to lowest.
         """
         query = self.preprocess([query])
         query_vector = self.model.transform(query)
         cosine_similarities = cosine_similarity(
             query_vector, self.model_vectors).flatten()
-        related_product_indices = cosine_similarities.argsort()[:-11:-1]
-        return cosine_similarities, related_product_indices
+        # Filter out low scores
+        filtered_scores = []
+        related_docs_indices = []
+
+        for i in range(len(cosine_similarities)):
+            if cosine_similarities[i] >= float(score_threshold):
+                filtered_scores.append(cosine_similarities[i])
+                related_docs_indices.append(i)
+
+        array_2d = np.vstack((filtered_scores, related_docs_indices)).T
+        sorted_indices = np.lexsort((array_2d[:,1],array_2d[:,0]))[::-1]
+        array_2d = array_2d[sorted_indices]
+
+        return cosine_similarities, array_2d[:, 1]
+    
 
     def preprocess(self, input):
         """Preprocesses text by removing unnecessary words and characters. Includes lowercasing, contraction and stop words removal, as well as lemmatization.

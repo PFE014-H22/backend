@@ -10,6 +10,8 @@ services:
     environment:
       - STACK_OVERFLOW_ANSWERS_FILTER=!6VvPDzQywl)na
       - STACK_EXCHANGE_API_KEY=4dKjXjKDIyAW)*3knpuW3g((
+      - MODEL_UPDATE_INTERVAL_SECONDS=86400
+      - SCORE_THRESHOLD=0.1
     ports:
       - 3001:3001
     volumes:

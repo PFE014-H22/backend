@@ -1,7 +1,5 @@
 # Backend
 
-backend
-
 ## To build the docker container
 
 ```bash
@@ -39,7 +37,6 @@ List of parameters related to the query, aggregated via the parameter name and t
     "answers": [
         {
             "parameter": {
-                "description": "lorem ipsum",
                 "matches": 2,
                 "name": "rack"
             },

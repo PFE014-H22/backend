@@ -76,22 +76,6 @@ def write_to_file(file_name, content):
         f.write(content)
 
 
-def find_parameter(text: str, parameter_file: str) -> list:
-    """
-    Finds all the parameters of the file present in the text
-
-    Args:
-        text (str): text to be searched
-        parameter_file (str): file containing the parameters
-
-    Returns:
-        list[str]: list of parameters present in the text
-    """
-    with open(parameter_file, "r") as f:
-        parameters = f.read().splitlines()
-
-    return list(set(text.split(" ")).intersection(parameters))
-
 if __name__ == "__main__":
     """
     File to run to populate the parameters file with the parameters from the cassandra documentation
