@@ -20,7 +20,7 @@ from src.details.similarity_score_strategy import SimilarityScoreStrategy
 from src.SO.update_dump import updateDump
 from src.config_parameters.technologies import find_parameter
 from train_model import train_model
-
+from urllib import parse
 
 # Path to the pre-trained model
 MODEL_PATH = "./BD/model.pickle"
@@ -131,6 +131,9 @@ def search():
     query = request.args.get("q", default="", type=str)
     technology = request.args.get("t", default="", type=str)
     print(f"GET /search?q={query}&t={technology}")
+
+    query = parse.unquote(query)
+    technology = parse.unquote(technology)
 
     # Model is used to determine questions sorted by highest similarity to query and similarity scores
     cosine_similarities, related_indexes = processor.search(query, os.environ['SCORE_THRESHOLD'])
