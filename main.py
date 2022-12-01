@@ -133,7 +133,7 @@ def search():
     print(f"GET /search?q={query}&t={technology}")
 
     # Model is used to determine questions sorted by highest similarity to query and similarity scores
-    cosine_similarities, related_indexes = processor.search(query)
+    cosine_similarities, related_indexes = processor.search(query, os.environ['SCORE_THRESHOLD'])
     normalized_scores = processor.normalize_scores(cosine_similarities, 0, 0.8, 0, 0.9)
 
     questions = []
