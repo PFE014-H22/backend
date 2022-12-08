@@ -28,6 +28,9 @@ You can then download the csv.
 
 The order is ascending so that we only have to add at the end when we update the file.
 
+For more information on how to add more technologies or more data sources go to:
+[DB readme](/BD)
+
 ## Available Routes
 
 ### `GET /search?q={query}&t={technology}`
